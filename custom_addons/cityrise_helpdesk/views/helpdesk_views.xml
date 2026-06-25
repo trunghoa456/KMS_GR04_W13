@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_helpdesk_team_kanban" model="ir.ui.view">
+        <field name="name">cityrise.helpdesk.team.kanban</field>
+        <field name="model">cityrise.helpdesk.team</field>
+        <field name="arch" type="xml">
+            <kanban string="Helpdesk Overview" class="o_kanban_mobile" create="false" quick_create="false" sample="1">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="open_ticket_count"/>
+                <field name="unassigned_ticket_count"/>
+                <field name="urgent_ticket_count"/>
+                <field name="failed_ticket_count"/>
+                <field name="closed_ticket_count"/>
+                <field name="daily_target"/>
+                <field name="sla_success_target"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click p-3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h3 class="mb-2"><field name="name"/></h3>
+                                    <div class="text-info">
+                                        <i class="fa fa-envelope-o me-1" title="Email"/>
+                                        <field name="email"/>
+                                    </div>
+                                </div>
+                                <span class="badge rounded-pill text-bg-info">Helpdesk</span>
+                            </div>
+                            <div class="row mt-4 g-2">
+                                <div class="col-6 col-lg-3 text-center border-end">
+                                    <div class="fs-5 text-info fw-bold"><field name="open_ticket_count"/></div>
+                                    <div class="text-muted">Open</div>
+                                </div>
+                                <div class="col-6 col-lg-3 text-center border-end">
+                                    <div class="fs-5 text-info fw-bold"><field name="unassigned_ticket_count"/></div>
+                                    <div class="text-muted">Unassigned</div>
+                                </div>
+                                <div class="col-6 col-lg-3 text-center border-end">
+                                    <div class="fs-5 text-info fw-bold"><field name="urgent_ticket_count"/></div>
+                                    <div class="text-muted">Urgent</div>
+                                </div>
+                                <div class="col-6 col-lg-3 text-center">
+                                    <div class="fs-5 text-info fw-bold"><field name="failed_ticket_count"/></div>
+                                    <div class="text-muted">Failed</div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-4">
+                                <button type="object" name="action_view_tickets" class="btn btn-primary">
+                                    Tickets
+                                </button>
+                                <div class="text-info">
+                                    Tickets Closed
+                                    <span class="fw-bold ms-2"><field name="closed_ticket_count"/></span>
+                                </div>
+                            </div>
+                            <div class="row mt-3 g-2">
+                                <div class="col-6">
+                                    <div class="small text-muted">Daily Target</div>
+                                    <div><field name="daily_target"/></div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="small text-muted">SLA Target</div>
+                                    <div><field name="sla_success_target"/>%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_helpdesk_team_list" model="ir.ui.view">
+        <field name="name">cityrise.helpdesk.team.list</field>
+        <field name="model">cityrise.helpdesk.team</field>
+        <field name="arch" type="xml">
+            <list string="Helpdesk Teams">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="open_ticket_count"/>
+                <field name="unassigned_ticket_count"/>
+                <field name="urgent_ticket_count"/>
+                <field name="failed_ticket_count"/>
+                <field name="closed_ticket_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_helpdesk_team_form" model="ir.ui.view">
+        <field name="name">cityrise.helpdesk.team.form</field>
+        <field name="model">cityrise.helpdesk.team</field>
+        <field name="arch" type="xml">
+            <form string="Helpdesk Team">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_tickets" type="object" class="oe_stat_button" icon="fa-ticket">
+                            <field name="open_ticket_count" widget="statinfo" string="Open Tickets"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="email"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                        </group>
+                        <group>
+                            <field name="daily_target"/>
+                            <field name="sla_success_target"/>
+                            <field name="member_ids" widget="many2many_tags_avatar"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_helpdesk_ticket_list" model="ir.ui.view">
+        <field name="name">cityrise.helpdesk.ticket.list</field>
+        <field name="model">cityrise.helpdesk.ticket</field>
+        <field name="arch" type="xml">
+            <list string="Tickets" multi_edit="1"
+                  decoration-danger="stage == 'failed'"
+                  decoration-muted="stage == 'closed'"
+                  decoration-warning="priority == '2' and stage not in ['closed', 'failed']">
+                <field name="number" decoration-bf="1"/>
+                <field name="name"/>
+                <field name="team_id"/>
+                <field name="partner_name" string="Customer"/>
+                <field name="partner_email"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="priority" widget="priority"/>
+                <field name="deadline" optional="show"/>
+                <field name="activity_ids" widget="list_activity" optional="show"/>
+                <field name="open_hours" widget="float_time" optional="hide"/>
+                <field name="stage" widget="badge"
+                    decoration-success="stage == 'closed'"
+                    decoration-danger="stage == 'failed'"
+                    decoration-info="stage in ['new', 'in_progress', 'waiting']"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_helpdesk_ticket_kanban" model="ir.ui.view">
+        <field name="name">cityrise.helpdesk.ticket.kanban</field>
+        <field name="model">cityrise.helpdesk.ticket</field>
+        <field name="arch" type="xml">
+            <kanban string="Tickets" default_group_by="stage" class="o_kanban_mobile" sample="1">
+                <field name="number"/>
+                <field name="name"/>
+                <field name="partner_name"/>
+                <field name="user_id"/>
+                <field name="priority"/>
+                <field name="stage"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click p-2">
+                            <div class="d-flex justify-content-between">
+                                <strong><field name="number"/></strong>
+                                <field name="priority" widget="priority"/>
+                            </div>
+                            <div class="mt-1"><field name="name"/></div>
+                            <div class="text-muted mt-1"><field name="partner_name"/></div>
+                            <div class="mt-2 d-flex justify-content-between">
+                                <field name="user_id" widget="many2one_avatar_user"/>
+                                <field name="stage" widget="badge"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_helpdesk_ticket_form" model="ir.ui.view">
+        <field name="name">cityrise.helpdesk.ticket.form</field>
+        <field name="model">cityrise.helpdesk.ticket</field>
+        <field name="arch" type="xml">
+            <form string="Helpdesk Ticket">
+                <header>
+                    <button name="action_close" type="object" string="Close" class="btn-primary"
+                        invisible="stage in ['closed', 'failed']"/>
+                    <button name="action_fail" type="object" string="Mark Failed"
+                        invisible="stage in ['closed', 'failed']"/>
+                    <button name="action_reopen" type="object" string="Reopen"
+                        invisible="stage not in ['closed', 'failed']"/>
+                    <field name="stage" widget="statusbar" statusbar_visible="new,in_progress,waiting,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="What does the customer need?"/>
+                        </h1>
+                        <h2>
+                            <field name="number" readonly="1"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="team_id"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="priority" widget="priority"/>
+                            <field name="deadline"/>
+                        </group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="partner_name"/>
+                            <field name="partner_email"/>
+                            <field name="open_hours" widget="float_time"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description" placeholder="Write the customer request, troubleshooting notes, and next action..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_helpdesk_ticket_search" model="ir.ui.view">
+        <field name="name">cityrise.helpdesk.ticket.search</field>
+        <field name="model">cityrise.helpdesk.ticket</field>
+        <field name="arch" type="xml">
+            <search string="Search Tickets">
+                <field name="number"/>
+                <field name="name"/>
+                <field name="partner_name"/>
+                <field name="partner_email"/>
+                <field name="team_id"/>
+                <field name="user_id"/>
+                <filter name="open" string="Open" domain="[('stage', 'not in', ['closed', 'failed'])]"/>
+                <filter name="unassigned" string="Unassigned" domain="[('user_id', '=', False), ('stage', 'not in', ['closed', 'failed'])]"/>
+                <filter name="urgent" string="Urgent" domain="[('priority', '=', '2'), ('stage', 'not in', ['closed', 'failed'])]"/>
+                <filter name="failed" string="Failed" domain="[('stage', '=', 'failed')]"/>
+                <filter name="my_tickets" string="My Tickets" domain="[('user_id', '=', uid)]"/>
+                <group>
+                    <filter name="group_team" string="Team" domain="[]" context="{'group_by': 'team_id'}"/>
+                    <filter name="group_assigned" string="Assigned To" domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_stage" string="Stage" domain="[]" context="{'group_by': 'stage'}"/>
+                    <filter name="group_priority" string="Priority" domain="[]" context="{'group_by': 'priority'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_helpdesk_ticket_pivot" model="ir.ui.view">
+        <field name="name">cityrise.helpdesk.ticket.pivot</field>
+        <field name="model">cityrise.helpdesk.ticket</field>
+        <field name="arch" type="xml">
+            <pivot string="Tickets Analysis">
+                <field name="team_id" type="row"/>
+                <field name="stage" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_helpdesk_ticket_graph" model="ir.ui.view">
+        <field name="name">cityrise.helpdesk.ticket.graph</field>
+        <field name="model">cityrise.helpdesk.ticket</field>
+        <field name="arch" type="xml">
+            <graph string="Tickets Analysis" type="bar">
+                <field name="team_id"/>
+                <field name="stage"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_helpdesk_overview" model="ir.actions.act_window">
+        <field name="name">Helpdesk Overview</field>
+        <field name="path">helpdesk</field>
+        <field name="res_model">cityrise.helpdesk.team</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="view_id" ref="view_helpdesk_team_kanban"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first helpdesk team.</p>
+        </field>
+    </record>
+
+    <record id="action_helpdesk_tickets" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="path">helpdesk-tickets</field>
+        <field name="res_model">cityrise.helpdesk.ticket</field>
+        <field name="view_mode">list,kanban,form,pivot,graph,activity</field>
+        <field name="view_id" ref="view_helpdesk_ticket_list"/>
+        <field name="search_view_id" ref="view_helpdesk_ticket_search"/>
+        <field name="context">{'search_default_open': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No tickets found. Let's create one!</p>
+            <p>Use tickets to capture customer issues, assign an owner, and track priority.</p>
+        </field>
+    </record>
+
+    <record id="action_helpdesk_reporting" model="ir.actions.act_window">
+        <field name="name">Helpdesk Reporting</field>
+        <field name="res_model">cityrise.helpdesk.ticket</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="search_view_id" ref="view_helpdesk_ticket_search"/>
+    </record>
+
+    <record id="action_helpdesk_teams" model="ir.actions.act_window">
+        <field name="name">Helpdesk Teams</field>
+        <field name="res_model">cityrise.helpdesk.team</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_helpdesk_root" name="Helpdesk" sequence="85"
+        web_icon="cityrise_helpdesk,static/description/icon.svg"/>
+    <menuitem id="menu_helpdesk_overview" name="Overview" parent="menu_helpdesk_root"
+        action="action_helpdesk_overview" sequence="1"/>
+    <menuitem id="menu_helpdesk_tickets" name="Tickets" parent="menu_helpdesk_root"
+        action="action_helpdesk_tickets" sequence="2"/>
+    <menuitem id="menu_helpdesk_reporting" name="Reporting" parent="menu_helpdesk_root"
+        action="action_helpdesk_reporting" sequence="3"/>
+    <menuitem id="menu_helpdesk_configuration" name="Configuration" parent="menu_helpdesk_root" sequence="4"/>
+    <menuitem id="menu_helpdesk_teams" name="Teams" parent="menu_helpdesk_configuration"
+        action="action_helpdesk_teams" sequence="1"/>
+</odoo>

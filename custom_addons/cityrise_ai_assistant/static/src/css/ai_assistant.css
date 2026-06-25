@@ -1,0 +1,224 @@
+.cityrise-ai {
+    min-height: calc(100vh - 88px);
+    padding: 56px 20px;
+    background: #f6f7f9;
+    color: #20232a;
+}
+
+.cityrise-ai-frame-body {
+    margin: 0;
+    background: #f6f7f9;
+}
+
+.cityrise-ai--embedded {
+    min-height: 100vh;
+    padding: 18px;
+}
+
+.cityrise-ai--embedded .cityrise-ai-shell {
+    max-width: none;
+    min-height: calc(100vh - 36px);
+    display: flex;
+    flex-direction: column;
+}
+
+.cityrise-ai--embedded .cityrise-ai-thread {
+    flex: 1;
+    max-height: none;
+}
+
+.cityrise-ai-shell {
+    max-width: 980px;
+    margin: 0 auto;
+    border: 1px solid #e6e8ed;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 16px 42px rgba(32, 35, 42, 0.08);
+    overflow: hidden;
+}
+
+.cityrise-ai-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 28px 32px;
+    border-bottom: 1px solid #eceef3;
+}
+
+.cityrise-ai-kicker {
+    margin: 0 0 4px;
+    color: #00a09d;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.cityrise-ai-header h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.cityrise-ai-badge {
+    border-radius: 999px;
+    background: #f0e6f3;
+    color: #714b67;
+    font-weight: 700;
+    padding: 8px 14px;
+}
+
+.cityrise-ai-thread {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 360px;
+    max-height: 58vh;
+    padding: 28px 32px;
+    overflow-y: auto;
+}
+
+.cityrise-ai-prompts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 0 32px 22px;
+    border-bottom: 1px solid #eceef3;
+}
+
+.cityrise-ai-prompts button,
+.cityrise-ai-suggestions button {
+    border: 1px solid #d9c4e2;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #714b67;
+    font-weight: 700;
+    padding: 8px 12px;
+}
+
+.cityrise-ai-prompts button:hover,
+.cityrise-ai-suggestions button:hover {
+    border-color: #714b67;
+    background: #f8f1fa;
+}
+
+.cityrise-ai-message {
+    max-width: 76%;
+    border-radius: 8px;
+    padding: 14px 16px;
+    line-height: 1.55;
+    white-space: pre-line;
+}
+
+.cityrise-ai-message p {
+    margin: 0;
+}
+
+.cityrise-ai-meta {
+    margin-top: 10px;
+    color: #7a7f89;
+    font-size: 0.82rem;
+}
+
+.cityrise-ai-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.cityrise-ai-suggestions button {
+    padding: 6px 10px;
+    font-size: 0.86rem;
+}
+
+.cityrise-ai-message-bot {
+    align-self: flex-start;
+    background: #f3f4f6;
+}
+
+.cityrise-ai-message-user {
+    align-self: flex-end;
+    background: #714b67;
+    color: #ffffff;
+}
+
+.cityrise-ai-form {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 14px;
+    padding: 22px 32px 30px;
+    border-top: 1px solid #eceef3;
+    background: #ffffff;
+}
+
+.cityrise-ai-form textarea {
+    grid-column: 1 / 2;
+    min-height: 78px;
+    resize: vertical;
+    border: 1px solid #dfe2e8;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font: inherit;
+}
+
+.cityrise-ai-contact {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.cityrise-ai-contact input {
+    min-height: 44px;
+    border: 1px solid #dfe2e8;
+    border-radius: 8px;
+    padding: 0 12px;
+}
+
+.cityrise-ai-form button {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    min-width: 108px;
+    border: 0;
+    border-radius: 8px;
+    background: #714b67;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.cityrise-ai-form button:disabled {
+    cursor: wait;
+    opacity: 0.72;
+}
+
+@media (max-width: 720px) {
+    .cityrise-ai {
+        padding: 20px 10px;
+    }
+
+    .cityrise-ai-header,
+    .cityrise-ai-thread,
+    .cityrise-ai-prompts,
+    .cityrise-ai-form {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .cityrise-ai-message {
+        max-width: 92%;
+    }
+
+    .cityrise-ai-form {
+        grid-template-columns: 1fr;
+    }
+
+    .cityrise-ai-form textarea,
+    .cityrise-ai-form button {
+        grid-column: 1 / -1;
+        grid-row: auto;
+    }
+
+    .cityrise-ai-contact {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="website_menu_ai_assistant" model="website.menu">
+        <field name="name">AI Assistant</field>
+        <field name="url">/ai-assistant</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" eval="45"/>
+    </record>
+
+    <template id="ai_assistant_widget" name="CityRise AI Assistant Widget">
+        <section
+            t-att-class="'cityrise-ai cityrise-ai--embedded' if embedded else 'cityrise-ai'"
+            t-att-data-internal="'1' if is_internal else '0'"
+            t-att-data-role="role_label"
+            t-att-data-endpoint="endpoint">
+            <div class="cityrise-ai-shell">
+                <div class="cityrise-ai-header">
+                    <div>
+                        <p class="cityrise-ai-kicker">CityRise</p>
+                        <h1>AI Assistant</h1>
+                    </div>
+                    <span class="cityrise-ai-badge" t-esc="audience_label"/>
+                </div>
+                <div class="cityrise-ai-thread" aria-live="polite">
+                    <div class="cityrise-ai-message cityrise-ai-message-bot">
+                        <p t-if="is_internal">
+                            Xin chào, mình đang chạy trong Odoo với quyền <t t-esc="audience_label"/>. Bạn có thể hỏi về knowledge, sales, purchase, tickets, nhân viên và dữ liệu CityRise theo phân quyền.
+                        </p>
+                        <p t-else="">
+                            Xin chào, mình có thể hỗ trợ thông tin công khai về sản phẩm CityRise, giá niêm yết, website và nhu cầu tư vấn. Dữ liệu nội bộ sẽ được bảo vệ theo access matrix.
+                        </p>
+                    </div>
+                </div>
+                <div class="cityrise-ai-prompts">
+                    <t t-if="is_internal">
+                        <button type="button" data-question="Tổng sales và purchase">Tổng sales và purchase</button>
+                        <button type="button" data-question="Doanh thu tháng này của công ty là bao nhiêu?">Doanh thu tháng này</button>
+                        <button type="button" data-question="Show me the CEO's salary">CEO salary</button>
+                        <button type="button" data-question="Purchase order P00030">Purchase P00030</button>
+                    </t>
+                    <t t-else="">
+                        <button type="button" data-question="Danh sách sản phẩm đang bán">Danh sách sản phẩm</button>
+                        <button type="button" data-question="Căn hộ rẻ nhất là gì?">Căn hộ rẻ nhất</button>
+                        <button type="button" data-question="Căn hộ từ 10 đến 15 tỷ">10-15 tỷ</button>
+                        <button type="button" data-question="Tôi cần tư vấn căn hộ 90x">Cần tư vấn</button>
+                    </t>
+                </div>
+                <form class="cityrise-ai-form">
+                    <textarea name="question" rows="3" placeholder="Nhập câu hỏi của bạn..." required="required"></textarea>
+                    <div class="cityrise-ai-contact" t-if="not is_internal">
+                        <input name="visitor_name" placeholder="Tên của bạn"/>
+                        <input name="visitor_phone" placeholder="Số điện thoại"/>
+                        <input name="visitor_email" placeholder="Email"/>
+                    </div>
+                    <button type="submit">Gửi</button>
+                </form>
+            </div>
+        </section>
+    </template>
+
+    <template id="ai_assistant_page" name="CityRise AI Assistant">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <t t-call="cityrise_ai_assistant.ai_assistant_widget"/>
+            </div>
+        </t>
+    </template>
+
+    <template id="ai_assistant_backend_frame" name="CityRise AI Assistant Backend Frame">
+        <html>
+            <head>
+                <title>CityRise AI Assistant</title>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <t t-call-assets="web.assets_frontend" t-js="false"/>
+                <t t-call-assets="web.assets_frontend" t-css="false"/>
+            </head>
+            <body class="cityrise-ai-frame-body">
+                <t t-call="cityrise_ai_assistant.ai_assistant_widget"/>
+            </body>
+        </html>
+    </template>
+</odoo>

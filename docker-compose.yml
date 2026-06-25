@@ -1,0 +1,109 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: cityrise_w13_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-odoo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-odoo} -d ${POSTGRES_DB:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - kms_net
+
+  odoo:
+    image: odoo:19.0
+    container_name: cityrise_w13_odoo
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      HOST: db
+      PORT: 5432
+      USER: ${POSTGRES_USER:-odoo}
+      PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+    command:
+      - odoo
+      - --database=${ODOO_DB:-cityrise_w13}
+      - --init=${ODOO_INIT_MODULES:-cityrise_ai_assistant,kms_knowledge}
+      - --without-demo=True
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://localhost:8069/web/login', timeout=5)\""]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 180s
+    ports:
+      - "${ODOO_HTTP_PORT:-8069}:8069"
+    volumes:
+      - odoo_data:/var/lib/odoo
+      - ./custom_addons:/mnt/extra-addons
+    networks:
+      - kms_net
+
+  chatbot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cityrise_w13_chatbot
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      odoo:
+        condition: service_healthy
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      VECTOR_PERSIST_DIR: ${VECTOR_PERSIST_DIR:-/app/chroma_db}
+      VECTOR_COLLECTION: ${VECTOR_COLLECTION:-kms_collection}
+      RAG_PROVIDER: ${RAG_PROVIDER:-local}
+      RAG_AUDIENCE: ${RAG_AUDIENCE:-public}
+      RAG_ALLOW_ROLE_SWITCH: ${RAG_ALLOW_ROLE_SWITCH:-false}
+      RAG_TOP_K: ${RAG_TOP_K:-4}
+      RAG_TEMPERATURE: ${RAG_TEMPERATURE:-0.2}
+      RAG_MAX_CONTEXT_CHARS: ${RAG_MAX_CONTEXT_CHARS:-4000}
+      ODOO_URL: http://odoo:8069
+      ODOO_DB: ${ODOO_DB:-cityrise_w13}
+      ODOO_LOGIN: ${ODOO_LOGIN:-admin}
+      ODOO_LOGIN_PASSWORD: ${ODOO_LOGIN_PASSWORD:-admin}
+      ODOO_DATA_LIMIT: ${ODOO_DATA_LIMIT:-50}
+      ODOO_DB_HOST: db
+      ODOO_DB_PORT: 5432
+      ODOO_DB_USER: ${POSTGRES_USER:-odoo}
+      ODOO_DB_PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.2:1b}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-1.5-flash}
+    ports:
+      - "${CHATBOT_PORT:-8501}:8501"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8501/_stcore/health', timeout=5)\""]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    volumes:
+      - vector_data:/app/chroma_db
+    networks:
+      - kms_net
+
+networks:
+  kms_net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  odoo_data:
+  vector_data:

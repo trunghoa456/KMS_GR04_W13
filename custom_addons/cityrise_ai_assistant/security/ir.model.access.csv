@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cityrise_ai_conversation_user,cityrise.ai.conversation user,model_cityrise_ai_conversation,base.group_user,1,1,1,0

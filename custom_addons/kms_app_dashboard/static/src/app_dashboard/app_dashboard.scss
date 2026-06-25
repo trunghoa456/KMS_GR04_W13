@@ -1,0 +1,629 @@
+.o_kms_dashboard_open .o_navbar {
+    position: relative;
+    z-index: 60;
+    pointer-events: none;
+}
+
+.o_kms_dashboard_open .o_main_navbar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 60;
+    border: 0;
+    background: transparent !important;
+    color: #ffffff;
+    pointer-events: none;
+}
+
+.o_kms_dashboard_open .o_main_navbar .o_navbar_apps_menu,
+.o_kms_dashboard_open .o_main_navbar .o_menu_brand,
+.o_kms_dashboard_open .o_main_navbar .o_navbar_breadcrumbs,
+.o_kms_dashboard_open .o_main_navbar .o_menu_sections {
+    display: none !important;
+}
+
+.o_kms_dashboard_open .o_main_navbar .o_menu_systray {
+    margin-left: auto;
+    padding-right: 14px;
+    background: transparent !important;
+    pointer-events: auto;
+}
+
+.o_kms_dashboard_open .o_main_navbar .o_menu_systray button,
+.o_kms_dashboard_open .o_main_navbar .o_menu_systray .dropdown-toggle {
+    color: #ffffff;
+}
+
+.o_kms_dashboard_open .o_web_client,
+.o_kms_dashboard_open .o_action_manager,
+.o_kms_dashboard_open .o_action_manager > .o_action,
+.o_kms_dashboard_open .o_action_manager > .o_action > .o_content {
+    min-height: 0;
+    background:
+        linear-gradient(90deg, rgba(8, 36, 47, 0.96), rgba(14, 13, 33, 0.96) 58%, rgba(4, 7, 18, 0.99)),
+        #050816;
+}
+
+.o_kms_dashboard_open .o_action_manager,
+.o_kms_dashboard_open .o_action_manager > .o_action {
+    overflow: hidden !important;
+}
+
+.o_kms_dashboard_open .o_action_manager > .o_action {
+    scrollbar-width: auto;
+    -ms-overflow-style: auto;
+}
+
+.o_kms_dashboard_open .o_action_manager > .o_action::-webkit-scrollbar {
+    display: block;
+    width: 14px;
+}
+
+.o_kms_dashboard_open .o_action_manager > .o_action > .o_content {
+    height: 100%;
+    overflow: hidden !important;
+}
+
+.kms_app_dashboard {
+    position: relative;
+    height: calc(100% + 46px);
+    min-height: calc(100vh - 46px);
+    margin-top: -46px;
+    padding: 64px 8vw 148px;
+    color: #f8fafc;
+    background:
+        linear-gradient(90deg, rgba(8, 36, 47, 0.96), rgba(14, 13, 33, 0.96) 58%, rgba(4, 7, 18, 0.99)),
+        linear-gradient(180deg, rgba(148, 163, 184, 0.10), rgba(15, 23, 42, 0.18) 45%, rgba(2, 6, 23, 0.48)),
+        #050816;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    scrollbar-width: auto;
+    -ms-overflow-style: auto;
+}
+
+.kms_app_dashboard::-webkit-scrollbar {
+    display: block;
+    width: 14px;
+}
+
+.kms_app_dashboard::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.kms_app_dashboard::-webkit-scrollbar-thumb {
+    border: 3px solid rgba(5, 8, 22, 0.98);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.56);
+}
+
+.kms_app_dashboard__drawer_toggle {
+    position: fixed;
+    z-index: 30;
+    top: 84px;
+    left: 24px;
+    display: grid;
+    width: 36px;
+    height: 36px;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.86);
+    font-size: 24px;
+    transition: background-color 0.16s ease, transform 0.16s ease;
+}
+
+.kms_app_dashboard__drawer_toggle:hover,
+.kms_app_dashboard__drawer_toggle:focus {
+    background: rgba(255, 255, 255, 0.10);
+    color: #ffffff;
+}
+
+.kms_app_dashboard__drawer_toggle.is-open {
+    transform: rotate(180deg);
+}
+
+.kms_app_dashboard__drawer {
+    position: fixed;
+    z-index: 25;
+    top: 46px;
+    bottom: 0;
+    left: 0;
+    width: 320px;
+    max-width: 88vw;
+    padding: 70px 18px 24px;
+    border-right: 1px solid rgba(255, 255, 255, 0.10);
+    background: rgba(12, 17, 31, 0.96);
+    box-shadow: 22px 0 44px rgba(0, 0, 0, 0.35);
+    overflow-y: auto;
+}
+
+.kms_app_dashboard__search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 7px;
+    background: rgba(255, 255, 255, 0.07);
+    color: rgba(255, 255, 255, 0.74);
+}
+
+.kms_app_dashboard__search input {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #ffffff;
+    font-size: 15px;
+}
+
+.kms_app_dashboard__search input::placeholder {
+    color: rgba(255, 255, 255, 0.48);
+}
+
+.kms_app_dashboard__search button {
+    display: grid;
+    width: 24px;
+    height: 24px;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.10);
+    color: rgba(255, 255, 255, 0.76);
+}
+
+.kms_app_dashboard__drawer_count {
+    margin: 14px 2px 12px;
+    color: rgba(255, 255, 255, 0.56);
+    font-size: 13px;
+}
+
+.kms_app_dashboard__drawer_apps {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.kms_app_dashboard__drawer_app {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 46px;
+    padding: 8px 10px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 15px;
+    text-align: left;
+}
+
+.kms_app_dashboard__drawer_app:hover,
+.kms_app_dashboard__drawer_app:focus {
+    background: rgba(20, 184, 166, 0.18);
+    color: #ffffff;
+}
+
+.kms_app_dashboard__drawer_icon {
+    display: grid;
+    width: 30px;
+    height: 30px;
+    flex: 0 0 auto;
+    place-items: center;
+}
+
+.kms_app_dashboard__drawer_icon img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+.kms_app_dashboard__drawer_icon i,
+.kms_app_dashboard__drawer_icon span {
+    display: grid;
+    width: 28px;
+    height: 28px;
+    place-items: center;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.kms_app_dashboard__drawer_icon .kms_app_dashboard__tile_icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+}
+
+.kms_app_dashboard__drawer_icon .kms_app_dashboard__tile_icon::before {
+    font-size: 12px;
+}
+
+.kms_app_dashboard__grid {
+    display: grid;
+    grid-template-columns: repeat(6, 116px);
+    justify-content: center;
+    gap: 42px 54px;
+    width: 100%;
+    max-width: 980px;
+    margin: 0 auto;
+}
+
+.kms_app_dashboard__empty {
+    display: flex;
+    width: 320px;
+    max-width: 100%;
+    margin: 96px auto 0;
+    align-items: center;
+    flex-direction: column;
+    gap: 14px;
+    color: rgba(255, 255, 255, 0.72);
+    text-align: center;
+}
+
+.kms_app_dashboard__empty i {
+    font-size: 32px;
+}
+
+.kms_app_dashboard__empty h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 24px;
+    line-height: 1.2;
+}
+
+.kms_app_dashboard__empty button {
+    min-height: 36px;
+    padding: 0 16px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 7px;
+    background: rgba(255, 255, 255, 0.10);
+    color: #ffffff;
+}
+
+.kms_app_dashboard__app {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    flex-direction: column;
+    gap: 12px;
+    color: #f8fafc;
+    text-align: center;
+    text-decoration: none;
+}
+
+.kms_app_dashboard__app:hover,
+.kms_app_dashboard__app:focus {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.kms_app_dashboard__app:hover .kms_app_dashboard__icon,
+.kms_app_dashboard__app:focus .kms_app_dashboard__icon {
+    border-color: rgba(255, 255, 255, 0.34);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.32);
+}
+
+.kms_app_dashboard__icon {
+    display: grid;
+    width: 88px;
+    height: 88px;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    background: rgba(30, 41, 59, 0.62);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09);
+    transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+}
+
+.kms_app_dashboard__icon_img {
+    width: 58px;
+    height: 58px;
+    object-fit: contain;
+}
+
+.kms_app_dashboard__icon i,
+.kms_app_dashboard__icon_initial {
+    display: grid;
+    width: 58px;
+    height: 58px;
+    place-items: center;
+    border-radius: 8px;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.kms_app_dashboard__tile_icon {
+    position: relative;
+    display: block;
+    width: 58px;
+    height: 58px;
+    border-radius: 12px;
+    background: var(--kms-tile-bg, #1f2937);
+    color: var(--kms-tile-color, #ffffff);
+    overflow: hidden;
+}
+
+.kms_app_dashboard__tile_icon::before {
+    content: attr(data-symbol);
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    color: inherit;
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.kms_app_dashboard__tile_icon::after {
+    content: "";
+    position: absolute;
+    inset: auto 7px 7px auto;
+    z-index: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
+    background: rgba(255, 255, 255, 0.22);
+}
+
+.kms_app_dashboard__tile_icon--discuss {
+    border-radius: 58% 42% 56% 44%;
+    background: linear-gradient(135deg, #ff980f 0%, #ff7a18 54%, #f05f57 55%, #f05f57 100%);
+}
+
+.kms_app_dashboard__tile_icon--discuss::before,
+.kms_app_dashboard__tile_icon--discuss::after,
+.kms_app_dashboard__tile_icon--to-do::before,
+.kms_app_dashboard__tile_icon--sign::before,
+.kms_app_dashboard__tile_icon--barcode::before {
+    content: "";
+}
+
+.kms_app_dashboard__tile_icon--calendar,
+.kms_app_dashboard__tile_icon--appointments {
+    background: linear-gradient(90deg, #fbbf24 0 33%, #f472b6 34% 66%, #60a5fa 67% 100%);
+    color: #111827;
+}
+
+.kms_app_dashboard__tile_icon--appointments::after {
+    inset: auto 4px 7px auto;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #0ea5e9;
+    box-shadow: inset 5px 0 0 #2dd4bf;
+}
+
+.kms_app_dashboard__tile_icon--to-do {
+    background:
+        linear-gradient(135deg, transparent 43%, #0e7490 44% 55%, transparent 56%),
+        linear-gradient(180deg, #263445, #172033);
+}
+
+.kms_app_dashboard__tile_icon--to-do::after {
+    inset: auto 11px 14px 13px;
+    width: auto;
+    height: 5px;
+    border-radius: 999px;
+    background: #22d3ee;
+}
+
+.kms_app_dashboard__tile_icon--knowledge {
+    background:
+        linear-gradient(90deg, #27c7b8 0 42%, transparent 42% 100%),
+        linear-gradient(90deg, transparent 0 24%, #a855f7 24% 70%, transparent 70%),
+        #30263f;
+}
+
+.kms_app_dashboard__tile_icon--knowledge::after {
+    inset: 8px 13px auto auto;
+    width: 22px;
+    height: 40px;
+    border-radius: 2px 2px 9px 9px;
+    background: #22d3c5;
+}
+
+.kms_app_dashboard__tile_icon--contacts {
+    background:
+        radial-gradient(circle at 48% 42%, #ffffff 0 10%, transparent 11%),
+        radial-gradient(circle at 48% 67%, #ffffff 0 19%, transparent 20%),
+        linear-gradient(90deg, #20d6c7 0 68%, #fb7185 69% 100%),
+        #24313f;
+}
+
+.kms_app_dashboard__tile_icon--crm {
+    background:
+        linear-gradient(135deg, transparent 28%, #22d3c5 29% 44%, transparent 45%),
+        linear-gradient(45deg, transparent 38%, #a855f7 39% 55%, transparent 56%),
+        #213043;
+}
+
+.kms_app_dashboard__tile_icon--sales,
+.kms_app_dashboard__tile_icon--manufacturing {
+    background:
+        linear-gradient(90deg, #a855f7 0 24%, transparent 24%),
+        linear-gradient(90deg, transparent 30%, #fb7185 30% 56%, transparent 56%),
+        linear-gradient(90deg, transparent 62%, #f59e0b 62% 84%, transparent 84%),
+        #263445;
+}
+
+.kms_app_dashboard__tile_icon--sales::after,
+.kms_app_dashboard__tile_icon--manufacturing::after {
+    inset: 11px 10px 9px auto;
+    width: 12px;
+    height: 38px;
+    background: #f59e0b;
+}
+
+.kms_app_dashboard__tile_icon--dashboards {
+    background:
+        linear-gradient(90deg, #a855f7 0 31%, transparent 31%),
+        linear-gradient(90deg, transparent 39%, #fb7185 39% 62%, transparent 62%),
+        linear-gradient(90deg, transparent 70%, #22d3c5 70% 100%),
+        #213043;
+}
+
+.kms_app_dashboard__tile_icon--ai::before {
+    color: #fbbf24;
+    font-size: 26px;
+}
+
+.kms_app_dashboard__tile_icon--project {
+    background:
+        linear-gradient(135deg, transparent 31%, #a855f7 32% 48%, transparent 49%),
+        linear-gradient(135deg, transparent 44%, #22d3c5 45% 67%, transparent 68%),
+        #22273a;
+}
+
+.kms_app_dashboard__tile_icon--planning {
+    background:
+        linear-gradient(90deg, #fbbf24 0 39%, transparent 39%),
+        linear-gradient(90deg, transparent 47%, #fb7185 47% 53%, transparent 53%),
+        linear-gradient(90deg, transparent 61%, #22d3c5 61% 100%),
+        #273044;
+}
+
+.kms_app_dashboard__tile_icon--helpdesk {
+    background:
+        linear-gradient(90deg, transparent 0 30%, #20d6c7 30% 70%, transparent 70%),
+        linear-gradient(180deg, transparent 0 30%, #20d6c7 30% 70%, transparent 70%),
+        #223047;
+}
+
+.kms_app_dashboard__tile_icon--website {
+    border-radius: 50%;
+    background:
+        linear-gradient(170deg, #2dd4bf 0 28%, #14465f 29% 45%, #38bdf8 46% 65%, #1d4ed8 66% 100%);
+}
+
+.kms_app_dashboard__tile_icon--purchase {
+    background:
+        linear-gradient(180deg, #22d3c5 0 32%, transparent 32%),
+        linear-gradient(180deg, transparent 40%, #a855f7 40% 72%, transparent 72%),
+        #273044;
+}
+
+.kms_app_dashboard__tile_icon--inventory {
+    background:
+        linear-gradient(150deg, transparent 22%, #f59e0b 23% 43%, transparent 44%),
+        linear-gradient(30deg, transparent 31%, #f97316 32% 58%, transparent 59%),
+        linear-gradient(90deg, transparent 42%, #a855f7 43% 72%, transparent 73%),
+        #273044;
+}
+
+.kms_app_dashboard__tile_icon--shop-floor {
+    background:
+        linear-gradient(105deg, #38bdf8 0 62%, transparent 63%),
+        linear-gradient(15deg, transparent 0 60%, #fb7185 61% 100%),
+        #263445;
+}
+
+.kms_app_dashboard__tile_icon--barcode {
+    background: #263445;
+}
+
+.kms_app_dashboard__tile_icon--barcode::after {
+    inset: 12px 11px;
+    width: auto;
+    height: auto;
+    border-radius: 2px;
+    background: repeating-linear-gradient(90deg, #a855f7 0 5px, transparent 5px 10px);
+}
+
+.kms_app_dashboard__tile_icon--sign {
+    background: #172033;
+}
+
+.kms_app_dashboard__tile_icon--sign::after {
+    inset: 26px 7px 19px 8px;
+    width: auto;
+    height: auto;
+    border-radius: 999px;
+    background: transparent;
+    border-bottom: 5px solid #0891b2;
+    border-left: 4px solid #0891b2;
+    transform: skewX(-18deg);
+}
+
+.kms_app_dashboard__tile_icon--employees,
+.kms_app_dashboard__tile_icon--live-chat {
+    background:
+        radial-gradient(circle at 34% 38%, #f59e0b 0 12%, transparent 13%),
+        radial-gradient(circle at 57% 31%, #a855f7 0 17%, transparent 18%),
+        radial-gradient(circle at 76% 42%, #22d3c5 0 10%, transparent 11%),
+        linear-gradient(90deg, #fbbf24 0 33%, #a855f7 34% 66%, #22d3c5 67% 100%);
+}
+
+.kms_app_dashboard__tile_icon--time-off {
+    border-radius: 50%;
+    background: conic-gradient(from 35deg, #f59e0b 0 24%, #38bdf8 24% 54%, #2563eb 54% 76%, #a855f7 76% 100%);
+}
+
+.kms_app_dashboard__tile_icon--apps {
+    border-radius: 50%;
+    background: conic-gradient(#22d3c5 0 25%, #a855f7 25% 50%, #38bdf8 50% 75%, #fb3f4a 75% 100%);
+}
+
+.kms_app_dashboard__tile_icon--settings {
+    background:
+        radial-gradient(circle at 50% 50%, #111827 0 18%, transparent 19%),
+        conic-gradient(#f59e0b 0 17%, #fb7185 17% 33%, #a855f7 33% 50%, #f59e0b 50% 66%, #f97316 66% 83%, #f59e0b 83% 100%);
+}
+
+.kms_app_dashboard__label {
+    max-width: 132px;
+    color: #f8fafc;
+    font-size: 16px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+@media (max-width: 768px) {
+    .kms_app_dashboard {
+        padding: 40px 18px 120px;
+    }
+
+    .kms_app_dashboard__drawer_toggle {
+        top: 58px;
+        left: 10px;
+    }
+
+    .kms_app_dashboard__drawer {
+        top: 46px;
+        width: 300px;
+        padding-top: 58px;
+    }
+
+    .kms_app_dashboard__grid {
+        grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+        gap: 30px 22px;
+    }
+
+    .kms_app_dashboard__icon {
+        width: 72px;
+        height: 72px;
+    }
+
+    .kms_app_dashboard__icon_img,
+    .kms_app_dashboard__icon i,
+    .kms_app_dashboard__icon_initial {
+        width: 48px;
+        height: 48px;
+        font-size: 24px;
+    }
+
+    .kms_app_dashboard__label {
+        max-width: 104px;
+        font-size: 14px;
+    }
+}

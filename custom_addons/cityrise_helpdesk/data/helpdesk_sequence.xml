@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_cityrise_helpdesk_ticket" model="ir.sequence">
+        <field name="name">CityRise Helpdesk Ticket</field>
+        <field name="code">cityrise.helpdesk.ticket</field>
+        <field name="prefix">T</field>
+        <field name="padding">5</field>
+        <field name="number_next">22</field>
+    </record>
+</odoo>

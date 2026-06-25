@@ -1,0 +1,12 @@
+.env
+__pycache__/
+*.py[cod]
+.pytest_cache/
+chroma_db/
+vector_data/
+postgres_data/
+odoo_data/
+*.sqlite3
+*.db
+*.log
+.git/

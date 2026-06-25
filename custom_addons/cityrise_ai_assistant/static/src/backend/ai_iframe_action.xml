@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="cityrise_ai_assistant.IframeAction">
+        <div class="o_cityrise_ai_iframe_action">
+            <iframe
+                class="o_cityrise_ai_iframe"
+                src="/cityrise_ai/backend_frame"
+                title="CityRise AI Chatbot"/>
+        </div>
+    </t>
+</templates>

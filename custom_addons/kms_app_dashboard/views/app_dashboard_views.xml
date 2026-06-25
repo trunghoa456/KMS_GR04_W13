@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_kms_app_dashboard" model="ir.actions.client">
+        <field name="name">Dashboard</field>
+        <field name="path">apps-dashboard</field>
+        <field name="tag">kms_app_dashboard.client_action</field>
+    </record>
+
+    <menuitem
+        id="menu_kms_app_dashboard_root"
+        name="Dashboard"
+        action="action_kms_app_dashboard"
+        web_icon="fa fa-th-large,#FFFFFF,#24313F"
+        sequence="1"/>
+</odoo>

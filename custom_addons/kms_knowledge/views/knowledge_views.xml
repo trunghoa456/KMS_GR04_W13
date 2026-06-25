@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_kms_knowledge_article_list" model="ir.ui.view">
+        <field name="name">kms.knowledge.article.list</field>
+        <field name="model">kms.knowledge.article</field>
+        <field name="arch" type="xml">
+            <list string="KMS Articles" default_order="workspace_dimension, name">
+                <field name="name"/>
+                <field name="workspace_dimension"/>
+                <field name="parent_id"/>
+                <field name="icon"/>
+                <field name="is_locked"/>
+                <field name="is_template"/>
+                <field name="tag_ids" widget="many2many_tags"/>
+                <field name="write_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_kms_knowledge_article_form" model="ir.ui.view">
+        <field name="name">kms.knowledge.article.form</field>
+        <field name="model">kms.knowledge.article</field>
+        <field name="arch" type="xml">
+            <form string="KMS Article">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="workspace_dimension"/>
+                        </group>
+                        <group>
+                            <field name="parent_id"/>
+                            <field name="icon"/>
+                            <field name="cover_url"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="is_locked"/>
+                            <field name="is_template"/>
+                            <field name="is_full_width"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Properties">
+                            <field name="properties_note" placeholder="Add article properties here..."/>
+                        </page>
+                        <page string="SOP Content">
+                            <field name="body_html" widget="html" placeholder="Write the rich-text SOP content here..."/>
+                        </page>
+                        <page string="Child Articles">
+                            <field name="child_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="workspace_dimension"/>
+                                    <field name="tag_ids" widget="many2many_tags"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_kms_knowledge_article_version_list" model="ir.ui.view">
+        <field name="name">kms.knowledge.article.version.list</field>
+        <field name="model">kms.knowledge.article.version</field>
+        <field name="arch" type="xml">
+            <list string="KMS Article Versions" default_order="create_date desc">
+                <field name="article_id"/>
+                <field name="name"/>
+                <field name="workspace_dimension"/>
+                <field name="change_summary"/>
+                <field name="create_uid"/>
+                <field name="create_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_kms_knowledge_article_search" model="ir.ui.view">
+        <field name="name">kms.knowledge.article.search</field>
+        <field name="model">kms.knowledge.article</field>
+        <field name="arch" type="xml">
+            <search string="Search KMS Articles">
+                <field name="name"/>
+                <field name="body_html"/>
+                <field name="parent_id"/>
+                <field name="tag_ids"/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter name="group_by_dimension" string="Workspace Dimension" context="{'group_by': 'workspace_dimension'}"/>
+                <filter name="group_by_parent" string="Parent Article" context="{'group_by': 'parent_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_kms_knowledge" model="ir.actions.client">
+        <field name="name">Knowledge</field>
+        <field name="path">knowledge</field>
+        <field name="tag">kms_knowledge.client_action</field>
+    </record>
+
+    <record id="action_kms_knowledge_home" model="ir.actions.client">
+        <field name="name">Home</field>
+        <field name="path">knowledge_home</field>
+        <field name="tag">kms_knowledge.client_action</field>
+        <field name="params">{'default_page': 'home'}</field>
+    </record>
+
+    <record id="action_kms_knowledge_articles" model="ir.actions.client">
+        <field name="name">Knowledge Articles</field>
+        <field name="path">knowledge_articles</field>
+        <field name="tag">kms_knowledge.client_action</field>
+    </record>
+
+    <record id="action_kms_knowledge_article_window" model="ir.actions.act_window">
+        <field name="name">Articles</field>
+        <field name="res_model">kms.knowledge.article</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_kms_knowledge_article_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first KMS article.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_report_kms_knowledge_article" model="ir.actions.report">
+        <field name="name">Knowledge Article PDF</field>
+        <field name="model">kms.knowledge.article</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">kms_knowledge.report_kms_knowledge_article</field>
+        <field name="report_file">kms_knowledge.report_kms_knowledge_article</field>
+        <field name="print_report_name">'Knowledge - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_kms_knowledge_article"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_kms_knowledge_article">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <t t-if="doc.cover_url">
+                            <img t-att-src="doc.cover_url" style="width: 100%; max-height: 180px; object-fit: cover; margin-bottom: 24px;"/>
+                        </t>
+                        <h1>
+                            <t t-if="doc.icon"><span t-esc="doc.icon"/> </t>
+                            <span t-esc="doc.name"/>
+                        </h1>
+                        <p style="color: #666;">
+                            Workspace:
+                            <span t-esc="dict(doc._fields['workspace_dimension'].selection).get(doc.workspace_dimension, doc.workspace_dimension)"/>
+                        </p>
+                        <t t-if="doc.properties_note">
+                            <h2>Properties</h2>
+                            <p t-esc="doc.properties_note"/>
+                        </t>
+                        <div t-out="doc.body_html"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <menuitem
+        id="menu_kms_knowledge_root"
+        name="Knowledge"
+        action="action_kms_knowledge"
+        web_icon="kms_knowledge,static/description/icon.svg"
+        sequence="30"/>
+
+    <menuitem
+        id="menu_kms_knowledge_home"
+        name="Home"
+        parent="menu_kms_knowledge_root"
+        action="kms_app_dashboard.action_kms_app_dashboard"
+        sequence="10"/>
+
+    <menuitem
+        id="menu_kms_knowledge_articles"
+        name="Articles"
+        parent="menu_kms_knowledge_root"
+        action="action_kms_knowledge_article_window"
+        sequence="20"/>
+</odoo>

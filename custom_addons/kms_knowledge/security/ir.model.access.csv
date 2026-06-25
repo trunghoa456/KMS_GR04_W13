@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_kms_knowledge_article_user,kms.knowledge.article.user,model_kms_knowledge_article,base.group_user,1,1,1,1
+access_kms_knowledge_article_version_user,kms.knowledge.article.version.user,model_kms_knowledge_article_version,base.group_user,1,1,1,1

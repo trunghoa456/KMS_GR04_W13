@@ -1,0 +1,1026 @@
+.o_kms_knowledge_open .o_main_navbar {
+    min-height: 47px;
+    border: 0;
+    border-bottom: 1px solid #343846;
+    background: #15141f;
+    color: #ffffff;
+}
+
+.o_kms_knowledge_open .o_main_navbar .o_navbar_apps_menu {
+    display: none;
+}
+
+.o_kms_knowledge_open .o_main_navbar .o_menu_brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding-left: 16px;
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.o_kms_knowledge_open .o_main_navbar .o_menu_brand::before {
+    content: "";
+    display: inline-block;
+    width: 21px;
+    height: 27px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #22c7ba 0 44%, #b85896 44% 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+}
+
+.o_kms_knowledge_open .o_main_navbar .o_nav_entry,
+.o_kms_knowledge_open .o_main_navbar button,
+.o_kms_knowledge_open .o_main_navbar .dropdown-toggle {
+    color: #ffffff;
+}
+
+.o_kms_knowledge_open .o_main_navbar .o_nav_entry {
+    padding: 0 11px;
+    font-size: 14px;
+    background: transparent !important;
+}
+
+.o_kms_knowledge_open .o_main_navbar .o_nav_entry:hover,
+.o_kms_knowledge_open .o_main_navbar .o_nav_entry:focus,
+.o_kms_knowledge_open .o_main_navbar .o_nav_entry.active,
+.o_kms_knowledge_open .o_main_navbar .o_nav_entry.focus {
+    background: transparent !important;
+}
+
+.o_kms_knowledge_open .o_main_navbar .o_menu_systray {
+    color: #ffffff;
+}
+
+.o_kms_knowledge_open .o_action_manager,
+.o_kms_knowledge_open .o_content {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.kms_knowledge {
+    display: grid;
+    height: calc(100vh - 47px);
+    min-height: 0;
+    max-height: none;
+    grid-template-columns: 300px minmax(0, 1fr);
+    overflow: hidden;
+    background: #252936;
+    color: #ffffff;
+}
+
+.kms_knowledge__sidebar {
+    display: flex;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    flex-direction: column;
+    overflow: hidden;
+    border-right: 1px solid #343946;
+    background: #171a24;
+    color: #b9bfcb;
+}
+
+.kms_knowledge__sidebar_top {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 14px 8px;
+}
+
+.kms_knowledge__new,
+.kms_knowledge__search_icon {
+    border: 0;
+    background: transparent;
+    color: #ffffff;
+}
+
+.kms_knowledge__new {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.kms_knowledge__new i {
+    font-size: 14px;
+}
+
+.kms_knowledge__search_icon {
+    position: relative;
+    display: inline-flex;
+    width: 29px;
+    height: 29px;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    border-radius: 4px;
+    font-size: 18px;
+}
+
+.kms_knowledge__search_icon:hover {
+    background: #222633;
+}
+
+.kms_knowledge__search_icon input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 29px;
+    height: 29px;
+    border: 0;
+    outline: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.kms_knowledge__search_icon:focus-within input {
+    z-index: 2;
+    width: 192px;
+    padding: 0 10px 0 30px;
+    border: 1px solid #465064;
+    border-radius: 5px;
+    background: #222633;
+    color: #ffffff;
+    opacity: 1;
+    cursor: text;
+}
+
+.kms_knowledge__search_icon:focus-within i {
+    z-index: 3;
+    position: absolute;
+    left: 9px;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.kms_knowledge__nav {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 0 6px 14px 14px;
+    overscroll-behavior: contain;
+}
+
+.kms_knowledge__nav::-webkit-scrollbar,
+.kms_knowledge__content::-webkit-scrollbar {
+    width: 10px;
+}
+
+.kms_knowledge__nav::-webkit-scrollbar-thumb,
+.kms_knowledge__content::-webkit-scrollbar-thumb {
+    border: 2px solid transparent;
+    border-radius: 8px;
+    background: #8a8a8a;
+    background-clip: content-box;
+}
+
+.kms_knowledge__section {
+    margin-top: 13px;
+}
+
+.kms_knowledge__section h2 {
+    margin: 0 0 6px;
+    color: #aeb5c2;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.kms_knowledge__nav_item,
+.kms_knowledge__folder {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    min-height: 29px;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: #b9bfcb;
+    font-size: 14px;
+    line-height: 1.2;
+    text-align: left;
+}
+
+.kms_knowledge__nav_item i,
+.kms_knowledge__folder i,
+.kms_knowledge__article_icon {
+    width: 14px;
+    flex: 0 0 auto;
+    color: #d8d1e6;
+    text-align: center;
+}
+
+.kms_knowledge__nav_item span,
+.kms_knowledge__folder span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.kms_knowledge__nav_item:hover {
+    background: #202638;
+    color: #ffffff;
+}
+
+.kms_knowledge__nav_item.is-active {
+    background: #12364f;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.kms_knowledge__emoji {
+    width: 17px;
+    flex: 0 0 auto;
+    text-align: center;
+}
+
+.kms_knowledge__folder {
+    position: relative;
+    padding-right: 30px;
+    color: #aeb5c2;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.kms_knowledge__folder:hover {
+    background: #252936;
+    color: #ffffff;
+}
+
+.kms_knowledge__folder:hover i {
+    color: #ffffff;
+}
+
+.kms_knowledge__folder_add {
+    display: flex;
+    width: 22px;
+    height: 22px;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    border: 0;
+    border-radius: 3px;
+    background: transparent;
+    color: #9aa3b1;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.kms_knowledge__folder:hover .kms_knowledge__folder_add,
+.kms_knowledge__folder_add:focus {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.kms_knowledge__folder_add:hover {
+    background: #343946;
+    color: #ffffff;
+}
+
+.kms_knowledge__folder_add i {
+    width: auto;
+    color: inherit;
+    font-size: 13px;
+}
+
+.kms_knowledge__folder--nested {
+    padding-left: 20px;
+}
+
+.kms_knowledge__nav_item--child {
+    padding-left: 21px;
+}
+
+.kms_knowledge__nav_item--deep {
+    padding-left: 34px;
+}
+
+.kms_knowledge__sidebar_bottom {
+    flex: 0 0 auto;
+    padding: 10px 14px 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    background: #171a24;
+}
+
+.kms_knowledge__sidebar_bottom button {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 0;
+    border: 0;
+    background: transparent;
+    color: #ffffff;
+    font-size: 14px;
+    text-align: left;
+}
+
+.kms_knowledge__sidebar_bottom button:hover,
+.kms_knowledge__sidebar_bottom button.is-active {
+    color: #ffffff;
+    background: transparent;
+}
+
+.kms_knowledge__trash_count {
+    display: inline-grid;
+    min-width: 18px;
+    height: 18px;
+    place-items: center;
+    margin-left: auto;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: #12364f;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.kms_knowledge__content {
+    display: flex;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+    background: #252936;
+}
+
+.kms_knowledge__topbar {
+    position: relative;
+    z-index: 20;
+    display: flex;
+    flex: 0 0 auto;
+    min-height: 49px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 0 14px 0 20px;
+    border-bottom: 1px solid #343946;
+    background: #252936;
+}
+
+.kms_knowledge__document_title {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 6px;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.kms_knowledge__document_title strong {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.kms_knowledge__cloud {
+    color: #586272;
+    font-size: 12px;
+}
+
+.kms_knowledge__tools {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 14px;
+}
+
+.kms_knowledge__tools button {
+    border: 0;
+    background: transparent;
+    color: #aeb5c2;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.kms_knowledge__tools button:hover {
+    color: #ffffff;
+}
+
+.kms_knowledge__tools button:disabled {
+    color: #6f7581;
+    cursor: not-allowed;
+}
+
+.kms_knowledge__tools .is-starred {
+    color: #f7c51b;
+    font-size: 16px;
+}
+
+.kms_knowledge__more {
+    position: relative;
+}
+
+.kms_knowledge__tools .kms_knowledge__more_toggle {
+    display: grid;
+    width: 38px;
+    height: 32px;
+    place-items: center;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #aeb5c2;
+    font-size: 15px;
+}
+
+.kms_knowledge__tools .kms_knowledge__more_toggle:hover,
+.kms_knowledge__tools .kms_knowledge__more_toggle.is-active {
+    border-color: #00a09d;
+    background: #25303d;
+    color: #ffffff;
+}
+
+.kms_knowledge__more_menu {
+    position: absolute;
+    z-index: 50;
+    top: 38px;
+    right: 0;
+    width: 310px;
+    overflow: hidden;
+    border: 1px solid #555a68;
+    border-radius: 4px;
+    background: #424655;
+    color: #e6e9ef;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
+}
+
+.kms_knowledge__more_menu .kms_knowledge__more_item {
+    display: grid;
+    width: 100%;
+    min-height: 31px;
+    align-items: center;
+    grid-template-columns: 26px minmax(0, 1fr) auto;
+    gap: 8px;
+    padding: 6px 13px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #e6e9ef;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.2;
+    text-align: left;
+}
+
+.kms_knowledge__more_menu .kms_knowledge__more_item:hover {
+    background: #505462;
+    color: #ffffff;
+}
+
+.kms_knowledge__more_menu .kms_knowledge__more_item i {
+    width: 23px;
+    color: #e4e6ec;
+    font-size: 17px;
+    text-align: center;
+}
+
+.kms_knowledge__more_menu .kms_knowledge__more_item span {
+    min-width: 0;
+}
+
+.kms_knowledge__more_divider {
+    height: 1px;
+    margin: 7px 0;
+    background: #5b6070;
+}
+
+.kms_knowledge__switch {
+    position: relative;
+    display: inline-flex;
+    width: 34px;
+    height: 16px;
+    align-items: center;
+    border: 1px solid #697080;
+    border-radius: 999px;
+    background: #555b68;
+}
+
+.kms_knowledge__switch span {
+    position: absolute;
+    left: 2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #a6adbb;
+    transition: left 0.14s ease, background 0.14s ease;
+}
+
+.kms_knowledge__switch.is-on {
+    border-color: #00a09d;
+    background: #007f7a;
+}
+
+.kms_knowledge__switch.is-on span {
+    left: 18px;
+    background: #ffffff;
+}
+
+.kms_knowledge__more_footer {
+    padding: 8px 14px 13px;
+    color: #aeb5c2;
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.kms_knowledge__more_editor {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.kms_knowledge__more_avatar {
+    display: inline-grid;
+    width: 18px;
+    height: 18px;
+    place-items: center;
+    border-radius: 4px;
+    background: #c7c83d;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.kms_knowledge__canvas {
+    flex: 0 0 auto;
+    min-height: 100%;
+    padding: 80px 38px 64px;
+}
+
+.kms_knowledge__canvas.is-full-width .kms_knowledge__welcome,
+.kms_knowledge__canvas.is-full-width .kms_knowledge__article_page,
+.kms_knowledge__canvas.is-full-width .kms_knowledge__trash,
+.kms_knowledge__canvas.is-full-width .kms_knowledge__templates,
+.kms_knowledge__canvas.is-full-width .kms_knowledge__checklist {
+    max-width: none;
+}
+
+.kms_knowledge__welcome,
+.kms_knowledge__article_page,
+.kms_knowledge__trash,
+.kms_knowledge__templates {
+    width: 100%;
+    max-width: 940px;
+    margin: 0 auto;
+    color: #ffffff;
+}
+
+.kms_knowledge__welcome {
+    padding-left: 2px;
+}
+
+.kms_knowledge__wave {
+    margin-bottom: 20px;
+    padding-left: 30px;
+    font-size: 58px;
+    line-height: 1;
+}
+
+.kms_knowledge__welcome h1 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 37px;
+    font-weight: 700;
+    line-height: 1.18;
+}
+
+.kms_knowledge__lead {
+    max-width: 840px;
+    margin: 10px 0 0;
+    color: #ffffff;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.kms_knowledge__lead strong {
+    color: #f4bf55;
+}
+
+.kms_knowledge__checklist {
+    max-width: 940px;
+    margin-top: 54px;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.kms_knowledge__section_title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #59606e;
+}
+
+.kms_knowledge__section_title i {
+    color: #aeb5c2;
+    font-size: 16px;
+}
+
+.kms_knowledge__section_title h2 {
+    margin: 0;
+    padding: 0 0 12px;
+    color: #ffffff;
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.kms_knowledge__checklist p {
+    margin: 16px 0 0;
+    color: #ffffff;
+    line-height: 1.45;
+}
+
+.kms_knowledge__checklist label {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin-top: 6px;
+    color: #ffffff;
+    line-height: 1.25;
+}
+
+.kms_knowledge__checklist input {
+    width: 14px;
+    height: 14px;
+    margin-top: 1px;
+    border: 1px solid #d1d4da;
+    border-radius: 0;
+    background: transparent;
+}
+
+.kms_knowledge__highlight {
+    background: #f7ca67;
+    color: #1f2430;
+}
+
+.kms_knowledge__article_page {
+    max-width: 980px;
+}
+
+.kms_knowledge__trash,
+.kms_knowledge__templates {
+    max-width: 980px;
+}
+
+.kms_knowledge__cover {
+    margin: -38px 0 30px;
+    overflow: hidden;
+    border-radius: 7px;
+    background: #171a24;
+}
+
+.kms_knowledge__cover img {
+    display: block;
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+}
+
+.kms_knowledge__properties {
+    display: grid;
+    gap: 8px;
+    margin: -8px 0 24px;
+    padding: 13px 15px;
+    border: 1px solid #343946;
+    border-radius: 6px;
+    background: #202431;
+}
+
+.kms_knowledge__properties div {
+    display: grid;
+    grid-template-columns: 110px minmax(0, 1fr);
+    gap: 14px;
+}
+
+.kms_knowledge__properties strong {
+    color: #aeb5c2;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.kms_knowledge__properties span {
+    color: #ffffff;
+    font-size: 13px;
+}
+
+.kms_knowledge__trash_empty {
+    display: grid;
+    min-height: 300px;
+    place-items: center;
+    align-content: center;
+    gap: 8px;
+    border: 1px dashed #59606e;
+    border-radius: 6px;
+    color: #aeb5c2;
+    text-align: center;
+}
+
+.kms_knowledge__trash_empty i {
+    color: #747d8c;
+    font-size: 35px;
+}
+
+.kms_knowledge__trash_empty h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 22px;
+}
+
+.kms_knowledge__trash_empty p {
+    margin: 0;
+    color: #aeb5c2;
+    font-size: 14px;
+}
+
+.kms_knowledge__trash_list {
+    display: grid;
+    gap: 8px;
+}
+
+.kms_knowledge__trash_row {
+    display: grid;
+    min-width: 0;
+    align-items: center;
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid #343946;
+    border-radius: 6px;
+    background: #202431;
+}
+
+.kms_knowledge__trash_row:hover {
+    border-color: #4a5262;
+    background: #242938;
+}
+
+.kms_knowledge__trash_icon {
+    display: grid;
+    width: 28px;
+    height: 28px;
+    place-items: center;
+    color: #d8d1e6;
+}
+
+.kms_knowledge__trash_meta {
+    display: grid;
+    min-width: 0;
+    gap: 4px;
+}
+
+.kms_knowledge__trash_meta strong {
+    overflow: hidden;
+    color: #ffffff;
+    font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.kms_knowledge__trash_meta span {
+    overflow: hidden;
+    color: #aeb5c2;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.kms_knowledge__trash_row button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border: 1px solid #59606e;
+    border-radius: 4px;
+    background: #2a3040;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.kms_knowledge__trash_row button:hover {
+    border-color: #00a09d;
+    background: #263a45;
+}
+
+.kms_knowledge__modal_backdrop {
+    position: fixed;
+    z-index: 1100;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: rgba(4, 7, 18, 0.62);
+}
+
+.kms_knowledge__modal {
+    display: flex;
+    width: 720px;
+    max-width: 100%;
+    max-height: calc(100vh - 70px);
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #555a68;
+    border-radius: 6px;
+    background: #252936;
+    color: #ffffff;
+    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45);
+}
+
+.kms_knowledge__modal header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 18px 20px;
+    border-bottom: 1px solid #343946;
+}
+
+.kms_knowledge__modal h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 20px;
+}
+
+.kms_knowledge__modal p {
+    margin: 5px 0 0;
+    color: #aeb5c2;
+    font-size: 13px;
+}
+
+.kms_knowledge__modal header button {
+    border: 0;
+    background: transparent;
+    color: #aeb5c2;
+    font-size: 16px;
+}
+
+.kms_knowledge__modal header button:hover {
+    color: #ffffff;
+}
+
+.kms_knowledge__version_empty,
+.kms_knowledge__version_list {
+    overflow-y: auto;
+    padding: 15px;
+}
+
+.kms_knowledge__version_empty {
+    color: #aeb5c2;
+}
+
+.kms_knowledge__version_list {
+    display: grid;
+    gap: 8px;
+}
+
+.kms_knowledge__version_row {
+    display: grid;
+    align-items: center;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 14px;
+    padding: 12px 13px;
+    border: 1px solid #343946;
+    border-radius: 6px;
+    background: #202431;
+}
+
+.kms_knowledge__version_row strong,
+.kms_knowledge__version_row span {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.kms_knowledge__version_row strong {
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.kms_knowledge__version_row span {
+    margin-top: 4px;
+    color: #aeb5c2;
+    font-size: 12px;
+}
+
+.kms_knowledge__version_row button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border: 1px solid #59606e;
+    border-radius: 4px;
+    background: #2a3040;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.kms_knowledge__version_row button:hover {
+    border-color: #00a09d;
+    background: #263a45;
+}
+
+.kms_knowledge__article_head {
+    margin-bottom: 22px;
+}
+
+.kms_knowledge__crumb {
+    margin-bottom: 10px;
+    color: #aeb5c2;
+    font-size: 12px;
+}
+
+.kms_knowledge__article_head h1 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 32px;
+    line-height: 1.18;
+}
+
+.kms_knowledge__article_head p {
+    margin: 8px 0 0;
+    color: #c3c8d1;
+    font-size: 14px;
+}
+
+.kms_knowledge__article {
+    color: #ffffff;
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+.kms_knowledge__article h1,
+.kms_knowledge__article h2,
+.kms_knowledge__article h3,
+.kms_knowledge__article h4,
+.kms_knowledge__article p,
+.kms_knowledge__article li,
+.kms_knowledge__article span,
+.kms_knowledge__article div {
+    color: #ffffff;
+}
+
+.kms_knowledge__article h2 {
+    margin-top: 27px;
+    font-size: 22px;
+}
+
+.kms_knowledge__article a {
+    color: #64c8ff;
+}
+
+@media (max-width: 900px) {
+    .kms_knowledge {
+        max-height: none;
+        grid-template-columns: 1fr;
+    }
+
+    .kms_knowledge__sidebar {
+        max-height: 45vh;
+        border-right: 0;
+        border-bottom: 1px solid #343946;
+    }
+
+    .kms_knowledge__content {
+        min-height: 60vh;
+    }
+
+    .kms_knowledge__topbar {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 14px 18px;
+    }
+
+    .kms_knowledge__tools {
+        gap: 12px;
+    }
+
+    .kms_knowledge__canvas {
+        padding: 48px 22px 56px;
+    }
+
+    .kms_knowledge__welcome h1 {
+        font-size: 34px;
+    }
+
+    .kms_knowledge__wave {
+        padding-left: 0;
+        font-size: 58px;
+    }
+}

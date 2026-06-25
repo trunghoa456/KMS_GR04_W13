@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="kms_knowledge.App">
+        <main class="kms_knowledge">
+            <aside class="kms_knowledge__sidebar">
+                <div class="kms_knowledge__sidebar_top">
+                    <button type="button" class="kms_knowledge__new" t-on-click="(ev) => this.createArticle(false, ev)">
+                        <i class="fa fa-plus"/>
+                        <span>New Article</span>
+                    </button>
+                    <label class="kms_knowledge__search_icon" title="Search">
+                        <i class="fa fa-search"/>
+                        <input type="search" t-att-value="state.query" t-on-input="onSearch" aria-label="Search articles"/>
+                    </label>
+                </div>
+
+                <nav class="kms_knowledge__nav" aria-label="Knowledge articles">
+                    <section class="kms_knowledge__section">
+                        <h2>Favorites</h2>
+                        <button
+                            type="button"
+                            class="kms_knowledge__nav_item is-favorite"
+                            t-att-class="{'is-active': isWelcome}"
+                            t-on-click="() => this.selectWelcome()">
+                            <span class="kms_knowledge__emoji">👋</span>
+                            <span t-esc="'Welcome ' + shortTitle(userDisplayName)"/>
+                        </button>
+                    </section>
+
+                    <section class="kms_knowledge__section">
+                        <h2>Workspace</h2>
+                        <button type="button" class="kms_knowledge__nav_item" t-on-click="() => this.selectWelcome()">
+                            <span class="kms_knowledge__emoji">👋</span>
+                            <span>Welcome Administrator</span>
+                        </button>
+                        <button type="button" class="kms_knowledge__nav_item">
+                            <span class="kms_knowledge__emoji">🔑</span>
+                            <span>Help</span>
+                        </button>
+                    </section>
+
+                    <section class="kms_knowledge__section">
+                        <h2>Shared</h2>
+                        <div class="kms_knowledge__folder">
+                            <i class="fa fa-file-text"/>
+                            <span>OPERATIONS</span>
+                            <button type="button" class="kms_knowledge__folder_add" title="Add article" t-on-click="(ev) => this.createArticle('OPERATIONS', ev)">
+                                <i class="fa fa-plus"/>
+                            </button>
+                        </div>
+                        <button
+                            t-foreach="operationArticles"
+                            t-as="article"
+                            t-key="article.id"
+                            type="button"
+                            class="kms_knowledge__nav_item kms_knowledge__nav_item--child"
+                            t-att-class="{'is-active': selectedArticle and selectedArticle.id === article.id}"
+                            t-on-click="() => this.selectArticle(article)">
+                            <span t-if="articleIcon(article)" class="kms_knowledge__article_icon" t-esc="articleIcon(article)"/>
+                            <i t-else="" class="fa fa-file-text"/>
+                            <span t-esc="shortTitle(article.name)"/>
+                        </button>
+
+                        <div class="kms_knowledge__folder kms_knowledge__folder--nested">
+                            <i class="fa fa-caret-down"/>
+                            <span>SALES</span>
+                            <button type="button" class="kms_knowledge__folder_add" title="Add article" t-on-click="(ev) => this.createArticle('SALES', ev)">
+                                <i class="fa fa-plus"/>
+                            </button>
+                        </div>
+                        <button
+                            t-foreach="salesArticles"
+                            t-as="article"
+                            t-key="article.id"
+                            type="button"
+                            class="kms_knowledge__nav_item kms_knowledge__nav_item--child kms_knowledge__nav_item--deep"
+                            t-att-class="{'is-active': selectedArticle and selectedArticle.id === article.id}"
+                            t-on-click="() => this.selectArticle(article)">
+                            <span t-if="articleIcon(article)" class="kms_knowledge__article_icon" t-esc="articleIcon(article)"/>
+                            <i t-else="" class="fa fa-file-text"/>
+                            <span t-esc="shortTitle(article.name)"/>
+                        </button>
+
+                        <div class="kms_knowledge__folder kms_knowledge__folder--nested">
+                            <i class="fa fa-caret-down"/>
+                            <span>PURCHASE</span>
+                            <button type="button" class="kms_knowledge__folder_add" title="Add article" t-on-click="(ev) => this.createArticle('PURCHASE', ev)">
+                                <i class="fa fa-plus"/>
+                            </button>
+                        </div>
+                        <button
+                            t-foreach="purchaseArticles"
+                            t-as="article"
+                            t-key="article.id"
+                            type="button"
+                            class="kms_knowledge__nav_item kms_knowledge__nav_item--child kms_knowledge__nav_item--deep"
+                            t-att-class="{'is-active': selectedArticle and selectedArticle.id === article.id}"
+                            t-on-click="() => this.selectArticle(article)">
+                            <span t-if="articleIcon(article)" class="kms_knowledge__article_icon" t-esc="articleIcon(article)"/>
+                            <i t-else="" class="fa fa-file-text"/>
+                            <span t-esc="shortTitle(article.name)"/>
+                        </button>
+
+                        <button
+                            t-foreach="otherArticles"
+                            t-as="article"
+                            t-key="article.id"
+                            type="button"
+                            class="kms_knowledge__nav_item kms_knowledge__nav_item--child"
+                            t-att-class="{'is-active': selectedArticle and selectedArticle.id === article.id}"
+                            t-on-click="() => this.selectArticle(article)">
+                            <span t-if="articleIcon(article)" class="kms_knowledge__article_icon" t-esc="articleIcon(article)"/>
+                            <i t-else="" class="fa fa-file-text"/>
+                            <span t-esc="shortTitle(article.name)"/>
+                        </button>
+                    </section>
+                </nav>
+
+                <div class="kms_knowledge__sidebar_bottom">
+                    <button
+                        type="button"
+                        t-att-class="{'is-active': isTemplates}"
+                        t-on-click="() => this.openTemplates()">
+                        <i class="fa fa-magic"/>
+                        <span>Browse Templates</span>
+                        <span t-if="templateArticles.length" class="kms_knowledge__trash_count" t-esc="templateArticles.length"/>
+                    </button>
+                    <button
+                        type="button"
+                        t-att-class="{'is-active': isTrash}"
+                        t-on-click="() => this.openTrash()">
+                        <i class="fa fa-trash-o"/>
+                        <span>Open the Trash</span>
+                        <span t-if="state.trashArticles.length" class="kms_knowledge__trash_count" t-esc="state.trashArticles.length"/>
+                    </button>
+                </div>
+            </aside>
+
+            <section class="kms_knowledge__content">
+                <header class="kms_knowledge__topbar">
+                    <div class="kms_knowledge__document_title">
+                        <t t-if="isTrash">
+                            <i class="fa fa-trash-o"/>
+                            <strong>Trash</strong>
+                        </t>
+                        <t t-elif="isTemplates">
+                            <i class="fa fa-magic"/>
+                            <strong>Templates</strong>
+                        </t>
+                        <t t-elif="isWelcome">
+                            <span>👋</span>
+                            <strong t-esc="'Welcome ' + userDisplayName"/>
+                            <i class="fa fa-cloud kms_knowledge__cloud"/>
+                        </t>
+                        <t t-else="">
+                            <span t-if="articleIcon(selectedArticle)" t-esc="articleIcon(selectedArticle)"/>
+                            <i t-else="" class="fa fa-file-text-o"/>
+                            <strong t-esc="selectedArticle.name"/>
+                            <i t-if="selectedArticle.is_locked" class="fa fa-lock kms_knowledge__cloud"/>
+                            </t>
+                    </div>
+                    <div class="kms_knowledge__tools" t-if="isTrash">
+                        <button type="button" t-on-click="() => this.selectWelcome()">Back</button>
+                    </div>
+                    <div class="kms_knowledge__tools" t-elif="isTemplates">
+                        <button type="button" t-on-click="() => this.selectWelcome()">Back</button>
+                    </div>
+                    <div class="kms_knowledge__tools" t-elif="selectedArticle">
+                        <button
+                            type="button"
+                            t-att-disabled="selectedArticle.is_locked"
+                            t-on-click="() => this.openArticleForm(selectedArticle)">
+                            Open form
+                        </button>
+                        <button type="button">Share</button>
+                        <button type="button" aria-label="Comments"><i class="fa fa-comments-o"/></button>
+                        <button type="button" class="is-starred" aria-label="Favorite"><i class="fa fa-star"/></button>
+                        <div class="kms_knowledge__more">
+                            <button
+                                type="button"
+                                class="kms_knowledge__more_toggle"
+                                t-att-class="{'is-active': state.isMoreMenuOpen}"
+                                aria-label="More"
+                                t-on-click="toggleMoreMenu">
+                                <i class="fa fa-ellipsis-v"/>
+                            </button>
+                            <div t-if="state.isMoreMenuOpen" class="kms_knowledge__more_menu" t-on-click="(ev) => ev.stopPropagation()">
+                                <button type="button" class="kms_knowledge__more_item" t-on-click="addIcon">
+                                    <i class="fa fa-globe"/>
+                                    <span>Add Icon</span>
+                                </button>
+                                <button type="button" class="kms_knowledge__more_item" t-on-click="addCover">
+                                    <i class="fa fa-picture-o"/>
+                                    <span>Add Cover</span>
+                                </button>
+                                <button type="button" class="kms_knowledge__more_item" t-on-click="addProperties">
+                                    <i class="fa fa-cogs"/>
+                                    <span>Add Properties</span>
+                                </button>
+                                <button type="button" class="kms_knowledge__more_item" t-on-click="toggleFullWidth">
+                                    <i class="fa fa-arrows-h"/>
+                                    <span>Full Width</span>
+                                    <span class="kms_knowledge__switch" t-att-class="{'is-on': state.isFullWidth}">
+                                        <span/>
+                                    </span>
+                                </button>
+
+                                <div class="kms_knowledge__more_divider"/>
+
+                                <button type="button" class="kms_knowledge__more_item" t-on-click="moveSelectedArticle">
+                                    <i class="fa fa-angle-double-right"/>
+                                    <span>Move To</span>
+                                </button>
+                                <button type="button" class="kms_knowledge__more_item" t-on-click="toggleLockContent">
+                                    <i class="fa fa-lock"/>
+                                    <span t-esc="selectedArticle.is_locked ? 'Unlock Content' : 'Lock Content'"/>
+                                </button>
+                                <button type="button" class="kms_knowledge__more_item" t-on-click="duplicateSelectedArticle">
+                                    <i class="fa fa-files-o"/>
+                                    <span>Create a Copy</span>
+                                </button>
+                                <button type="button" class="kms_knowledge__more_item" t-on-click="openVersionHistory">
+                                    <i class="fa fa-history"/>
+                                    <span>Open Version History</span>
+                                </button>
+                                <button type="button" class="kms_knowledge__more_item" t-on-click="convertIntoArticleItem">
+                                    <i class="fa fa-list"/>
+                                    <span>Convert into Article Item</span>
+                                </button>
+                                <button type="button" class="kms_knowledge__more_item" t-on-click="downloadPdf">
+                                    <i class="fa fa-download"/>
+                                    <span>Download PDF</span>
+                                </button>
+                                <button type="button" class="kms_knowledge__more_item" t-on-click="addToTemplates">
+                                    <i class="fa fa-paint-brush"/>
+                                    <span>Add to Templates</span>
+                                </button>
+                                <button type="button" class="kms_knowledge__more_item" t-on-click="sendSelectedToTrash">
+                                    <i class="fa fa-trash"/>
+                                    <span>Send to Trash</span>
+                                </button>
+
+                                <div class="kms_knowledge__more_divider"/>
+
+                                <div class="kms_knowledge__more_footer">
+                                    <div>Last Edited &#183; <span t-esc="selectedEditedLabel"/></div>
+                                    <div class="kms_knowledge__more_editor">
+                                        <span class="kms_knowledge__more_avatar" t-esc="selectedEditorInitial"/>
+                                        <span t-esc="selectedEditorName"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="kms_knowledge__canvas" t-att-class="{'is-full-width': state.isFullWidth}">
+                    <article class="kms_knowledge__trash" t-if="isTrash">
+                        <div class="kms_knowledge__article_head">
+                            <div class="kms_knowledge__crumb">Workspace / Trash</div>
+                            <h1>Trash</h1>
+                            <p>Restore archived Knowledge articles back into the workspace.</p>
+                        </div>
+
+                        <div class="kms_knowledge__trash_empty" t-if="!state.trashArticles.length">
+                            <i class="fa fa-trash-o"/>
+                            <h2>Trash is empty</h2>
+                            <p>Articles sent to trash will appear here.</p>
+                        </div>
+
+                        <div class="kms_knowledge__trash_list" t-else="">
+                            <div
+                                class="kms_knowledge__trash_row"
+                                t-foreach="state.trashArticles"
+                                t-as="article"
+                                t-key="article.id">
+                                <div class="kms_knowledge__trash_icon">
+                                    <i class="fa fa-file-text"/>
+                                </div>
+                                <div class="kms_knowledge__trash_meta">
+                                    <strong t-esc="article.name"/>
+                                    <span>
+                                        <t t-esc="dimensionLabel(article.workspace_dimension)"/>
+                                        &#183; Last edited <t t-esc="editedLabel(article)"/>
+                                    </span>
+                                </div>
+                                <button type="button" t-on-click="(ev) => this.restoreArticle(article, ev)">
+                                    <i class="fa fa-undo"/>
+                                    <span>Restore</span>
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="kms_knowledge__templates" t-elif="isTemplates">
+                        <div class="kms_knowledge__article_head">
+                            <div class="kms_knowledge__crumb">Workspace / Templates</div>
+                            <h1>Templates</h1>
+                            <p>Create a new article from saved templates.</p>
+                        </div>
+
+                        <div class="kms_knowledge__trash_empty" t-if="!templateArticles.length">
+                            <i class="fa fa-magic"/>
+                            <h2>No templates yet</h2>
+                            <p>Use the article menu and choose Add to Templates.</p>
+                        </div>
+
+                        <div class="kms_knowledge__trash_list" t-else="">
+                            <div
+                                class="kms_knowledge__trash_row"
+                                t-foreach="templateArticles"
+                                t-as="article"
+                                t-key="article.id">
+                                <div class="kms_knowledge__trash_icon">
+                                    <span t-if="articleIcon(article)" t-esc="articleIcon(article)"/>
+                                    <i t-else="" class="fa fa-file-text"/>
+                                </div>
+                                <div class="kms_knowledge__trash_meta">
+                                    <strong t-esc="article.name"/>
+                                    <span>
+                                        <t t-esc="dimensionLabel(article.workspace_dimension)"/>
+                                        &#183; Last edited <t t-esc="editedLabel(article)"/>
+                                    </span>
+                                </div>
+                                <button type="button" t-on-click="(ev) => this.createFromTemplate(article, ev)">
+                                    <i class="fa fa-plus"/>
+                                    <span>Use Template</span>
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="kms_knowledge__welcome" t-elif="isWelcome">
+                        <div class="kms_knowledge__wave">👋</div>
+                        <h1>Hello there<br/><span t-esc="userDisplayName"/>,</h1>
+                        <p class="kms_knowledge__lead">
+                            This is where you and your team can centralize your
+                            <strong>Knowledge</strong>
+                            and best practices! 🚀
+                        </p>
+
+                        <section class="kms_knowledge__checklist">
+                            <div class="kms_knowledge__section_title">
+                                <i class="fa fa-th"/>
+                                <h2>Diving in</h2>
+                            </div>
+                            <p>This private page is for you to play around with.<br/>Ready to give it a spin?</p>
+                            <p>Try the following 👇</p>
+                            <label><input type="checkbox"/>Check this box to indicate it's done</label>
+                            <label><input type="checkbox"/>Click anywhere, and just start typing</label>
+                            <label><input type="checkbox"/>Press Ctrl+/ ⌘+/ to undo any change</label>
+                            <label><input type="checkbox"/>Select text to <span class="kms_knowledge__highlight">Highlight</span>, <s>strikethrough</s> or <strong>style</strong> <em>it</em></label>
+                            <label><input type="checkbox"/>Below this list, try commands by typing "/"</label>
+                        </section>
+                    </article>
+
+                    <article class="kms_knowledge__article_page" t-else="">
+                        <div t-if="selectedArticle.cover_url" class="kms_knowledge__cover">
+                            <img t-att-src="selectedArticle.cover_url" t-att-alt="selectedArticle.name"/>
+                        </div>
+                        <div class="kms_knowledge__article_head">
+                            <div class="kms_knowledge__crumb">Workspace / KMS / Article</div>
+                            <h1>
+                                <span t-if="articleIcon(selectedArticle)" t-esc="articleIcon(selectedArticle)"/>
+                                <span t-esc="selectedArticle.name"/>
+                            </h1>
+                            <p t-if="selectedArticle.workspace_dimension" t-esc="dimensionLabel(selectedArticle.workspace_dimension)"/>
+                        </div>
+                        <div class="kms_knowledge__properties" t-if="selectedArticle.properties_note or selectedArticle.is_locked or selectedArticle.is_template">
+                            <div t-if="selectedArticle.properties_note">
+                                <strong>Properties</strong>
+                                <span t-esc="selectedArticle.properties_note"/>
+                            </div>
+                            <div t-if="selectedArticle.is_locked">
+                                <strong>Status</strong>
+                                <span><i class="fa fa-lock"/> Locked</span>
+                            </div>
+                            <div t-if="selectedArticle.is_template">
+                                <strong>Template</strong>
+                                <span><i class="fa fa-magic"/> Available in templates</span>
+                            </div>
+                        </div>
+                        <div class="kms_knowledge__article" t-out="articleContent"/>
+                    </article>
+                </div>
+            </section>
+            <div class="kms_knowledge__modal_backdrop" t-if="state.isVersionHistoryOpen" t-on-click="closeVersionHistory">
+                <section class="kms_knowledge__modal" t-on-click="(ev) => ev.stopPropagation()">
+                    <header>
+                        <div>
+                            <h2>Version History</h2>
+                            <p t-if="selectedArticle" t-esc="selectedArticle.name"/>
+                        </div>
+                        <button type="button" aria-label="Close" t-on-click="closeVersionHistory">
+                            <i class="fa fa-times"/>
+                        </button>
+                    </header>
+                    <div class="kms_knowledge__version_empty" t-if="!state.versionHistory.length">
+                        No versions yet.
+                    </div>
+                    <div class="kms_knowledge__version_list" t-else="">
+                        <article
+                            class="kms_knowledge__version_row"
+                            t-foreach="state.versionHistory"
+                            t-as="version"
+                            t-key="version.id">
+                            <div>
+                                <strong>
+                                    <span t-if="version.icon" t-esc="version.icon"/>
+                                    <span t-esc="version.name"/>
+                                </strong>
+                                <span>
+                                    <t t-esc="version.change_summary or 'Version snapshot'"/>
+                                    &#183;
+                                    <t t-esc="dimensionLabel(version.workspace_dimension)"/>
+                                    &#183;
+                                    <t t-esc="editedLabel(version)"/>
+                                </span>
+                            </div>
+                            <button type="button" t-on-click="(ev) => this.restoreVersion(version, ev)">
+                                <i class="fa fa-undo"/>
+                                Restore
+                            </button>
+                        </article>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </t>
+</templates>

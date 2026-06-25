@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="kms_app_dashboard.AppDashboard">
+        <main class="kms_app_dashboard">
+            <section class="kms_app_dashboard__grid" aria-label="Active Odoo apps">
+                <t t-foreach="filteredApps" t-as="app" t-key="app.id">
+                    <a
+                        class="kms_app_dashboard__app"
+                        t-att-class="app.isAvailable ? '' : 'is-placeholder'"
+                        t-att-href="app.href"
+                        t-att-data-menu-xmlid="app.xmlid"
+                        t-att-title="app.isAvailable ? app.name : `${app.name} is not installed. Open Apps to install it.`"
+                        t-on-click.prevent="() => this.openApp(app)">
+                        <span class="kms_app_dashboard__icon">
+                            <img
+                                t-if="app.icon.type === 'image'"
+                                class="kms_app_dashboard__icon_img"
+                                t-att-src="app.icon.src"
+                                t-att-alt="app.name"/>
+                            <i
+                                t-elif="app.icon.type === 'font'"
+                                t-att-class="app.icon.iconClass"
+                                t-att-style="`color: ${app.icon.color}; background-color: ${app.icon.backgroundColor};`"/>
+                            <span
+                                t-elif="app.icon.type === 'tile'"
+                                class="kms_app_dashboard__tile_icon"
+                                t-att-class="app.icon.className"
+                                t-att-data-symbol="app.icon.symbol"
+                                t-att-style="`--kms-tile-color: ${app.icon.color}; --kms-tile-bg: ${app.icon.backgroundColor};`"/>
+                            <span
+                                t-else=""
+                                class="kms_app_dashboard__icon_initial"
+                                t-att-style="`color: ${app.icon.color}; background-color: ${app.icon.backgroundColor};`"
+                                t-esc="app.icon.label"/>
+                        </span>
+                        <span class="kms_app_dashboard__label" t-esc="app.name"/>
+                    </a>
+                </t>
+            </section>
+
+            <section class="kms_app_dashboard__empty" t-if="!filteredApps.length">
+                <i class="fa fa-search"/>
+                <h2>No apps found</h2>
+                <button type="button" t-on-click="() => this.clearSearch()">Clear search</button>
+            </section>
+        </main>
+    </t>
+</templates>
