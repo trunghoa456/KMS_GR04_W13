@@ -142,6 +142,11 @@ class CityRiseVectorStore:
         return value in ("1", "true", "yes", "on")
 
     @classmethod
+    def odoo_always_use_llm(cls):
+        value = (cls.config("CITYRISE_ODOO_ALWAYS_USE_LLM", "0") or "0").lower()
+        return value in ("1", "true", "yes", "on")
+
+    @classmethod
     def ollama_model(cls):
         return cls.config("OLLAMA_MODEL", "llama3.2:1b")
 

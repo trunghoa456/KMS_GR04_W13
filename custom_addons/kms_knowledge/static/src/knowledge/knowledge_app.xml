@@ -101,6 +101,66 @@
                             <span t-esc="shortTitle(article.name)"/>
                         </button>
 
+                        <div class="kms_knowledge__folder kms_knowledge__folder--nested">
+                            <i class="fa fa-caret-down"/>
+                            <span>HR</span>
+                            <button type="button" class="kms_knowledge__folder_add" title="Add article" t-on-click="(ev) => this.createArticle('HR', ev)">
+                                <i class="fa fa-plus"/>
+                            </button>
+                        </div>
+                        <button
+                            t-foreach="hrArticles"
+                            t-as="article"
+                            t-key="article.id"
+                            type="button"
+                            class="kms_knowledge__nav_item kms_knowledge__nav_item--child kms_knowledge__nav_item--deep"
+                            t-att-class="{'is-active': selectedArticle and selectedArticle.id === article.id}"
+                            t-on-click="() => this.selectArticle(article)">
+                            <span t-if="articleIcon(article)" class="kms_knowledge__article_icon" t-esc="articleIcon(article)"/>
+                            <i t-else="" class="fa fa-file-text"/>
+                            <span t-esc="shortTitle(article.name)"/>
+                        </button>
+
+                        <div class="kms_knowledge__folder kms_knowledge__folder--nested">
+                            <i class="fa fa-caret-down"/>
+                            <span>IT</span>
+                            <button type="button" class="kms_knowledge__folder_add" title="Add article" t-on-click="(ev) => this.createArticle('IT', ev)">
+                                <i class="fa fa-plus"/>
+                            </button>
+                        </div>
+                        <button
+                            t-foreach="itArticles"
+                            t-as="article"
+                            t-key="article.id"
+                            type="button"
+                            class="kms_knowledge__nav_item kms_knowledge__nav_item--child kms_knowledge__nav_item--deep"
+                            t-att-class="{'is-active': selectedArticle and selectedArticle.id === article.id}"
+                            t-on-click="() => this.selectArticle(article)">
+                            <span t-if="articleIcon(article)" class="kms_knowledge__article_icon" t-esc="articleIcon(article)"/>
+                            <i t-else="" class="fa fa-file-text"/>
+                            <span t-esc="shortTitle(article.name)"/>
+                        </button>
+
+                        <div class="kms_knowledge__folder kms_knowledge__folder--nested">
+                            <i class="fa fa-caret-down"/>
+                            <span>LEGAL</span>
+                            <button type="button" class="kms_knowledge__folder_add" title="Add article" t-on-click="(ev) => this.createArticle('LEGAL', ev)">
+                                <i class="fa fa-plus"/>
+                            </button>
+                        </div>
+                        <button
+                            t-foreach="legalArticles"
+                            t-as="article"
+                            t-key="article.id"
+                            type="button"
+                            class="kms_knowledge__nav_item kms_knowledge__nav_item--child kms_knowledge__nav_item--deep"
+                            t-att-class="{'is-active': selectedArticle and selectedArticle.id === article.id}"
+                            t-on-click="() => this.selectArticle(article)">
+                            <span t-if="articleIcon(article)" class="kms_knowledge__article_icon" t-esc="articleIcon(article)"/>
+                            <i t-else="" class="fa fa-file-text"/>
+                            <span t-esc="shortTitle(article.name)"/>
+                        </button>
+
                         <button
                             t-foreach="otherArticles"
                             t-as="article"

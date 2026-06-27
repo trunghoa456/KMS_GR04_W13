@@ -9,7 +9,7 @@
         if (options.sources && options.sources.length) {
             const meta = document.createElement("div");
             meta.className = "cityrise-ai-meta";
-            meta.textContent = `Nguồn: ${options.sources.join(", ")}`;
+            meta.textContent = `Nguon: ${options.sources.join(", ")}`;
             message.appendChild(meta);
         }
 
@@ -71,8 +71,8 @@
             appendMessage(thread, question, "user");
             questionInput.value = "";
             submitButton.disabled = true;
-            submitButton.textContent = "Đang gửi";
-            const waiting = appendMessage(thread, "Đang xử lý...", "bot");
+            submitButton.textContent = "Dang gui";
+            const waiting = appendMessage(thread, "Dang xu ly...", "bot");
             const payload = {
                 question,
                 visitor_name: fieldValue("[name='visitor_name']"),
@@ -87,11 +87,11 @@
                     body: JSON.stringify(payload),
                 });
                 const data = await response.json();
-                waiting.querySelector("p").textContent = data.answer || "Mình chưa thể trả lời câu hỏi này.";
+                waiting.querySelector("p").textContent = data.answer || "Minh chua the tra loi cau hoi nay.";
                 if (data.sources && data.sources.length) {
                     const meta = document.createElement("div");
                     meta.className = "cityrise-ai-meta";
-                    meta.textContent = `Nguồn: ${data.sources.join(", ")}`;
+                    meta.textContent = `Nguon: ${data.sources.join(", ")}`;
                     waiting.appendChild(meta);
                 }
                 if (data.suggestions && data.suggestions.length) {
@@ -107,10 +107,10 @@
                     waiting.appendChild(suggestions);
                 }
             } catch (error) {
-                waiting.querySelector("p").textContent = "Kết nối đang gặp lỗi. Bạn vui lòng thử lại sau.";
+                waiting.querySelector("p").textContent = "Ket noi dang gap loi. Ban vui long thu lai sau.";
             } finally {
                 submitButton.disabled = false;
-                submitButton.textContent = "Gửi";
+                submitButton.textContent = "Gui";
                 thread.scrollTop = thread.scrollHeight;
             }
         }

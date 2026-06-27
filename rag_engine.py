@@ -256,16 +256,34 @@ def load_vector_db() -> Chroma:
     )
 
 
+def exact_source_ids(question: str) -> list[str]:
+    """Return business record codes that should be boosted before semantic search."""
+
+    ids = []
+    for match in re.findall(r"\b[A-Z]\d{5}\b", (question or "").upper()):
+        if match not in ids:
+            ids.append(match)
+    return ids
+
+
 def retrieve_context(question: str, top_k: int = 4, audience: str = "internal") -> list[RetrievedChunk]:
     db = load_vector_db()
-    docs = db.similarity_search(question, k=max(1, min(int(top_k), 10)), filter=role_filter(audience))
+    safe_top_k = max(1, min(int(top_k), 10))
     chunks = []
     seen = set()
-    for doc in docs:
-        metadata = doc.metadata or {}
-        key = (metadata.get("title"), compact(doc.page_content, 160))
+
+    def allowed(metadata: dict[str, Any]) -> bool:
+        access_role = metadata.get("access_role") or "unknown"
+        if audience == "public":
+            return access_role == "public"
+        return access_role in INTERNAL_ACCESS_ROLES
+
+    def add_chunk(metadata: dict[str, Any], content: str) -> None:
+        if not allowed(metadata):
+            return
+        key = (metadata.get("title"), compact(content, 160))
         if key in seen:
-            continue
+            return
         seen.add(key)
         chunks.append(
             RetrievedChunk(
@@ -274,10 +292,20 @@ def retrieve_context(question: str, top_k: int = 4, audience: str = "internal") 
                 workspace_dimension=metadata.get("workspace_dimension") or "unknown",
                 source_model=metadata.get("source_model") or "vector",
                 source_id=str(metadata.get("source_id") or ""),
-                content=compact(doc.page_content),
+                content=compact(content),
             )
         )
-    return chunks
+
+    for source_id in exact_source_ids(question):
+        exact = db._collection.get(where={"source_id": source_id}, include=["documents", "metadatas"])
+        for content, metadata in zip(exact.get("documents") or [], exact.get("metadatas") or []):
+            add_chunk(metadata or {}, content or "")
+
+    docs = db.similarity_search(question, k=safe_top_k, filter=role_filter(audience))
+    for doc in docs:
+        metadata = doc.metadata or {}
+        add_chunk(metadata, doc.page_content)
+    return chunks[:safe_top_k]
 
 
 def context_to_prompt(chunks: list[RetrievedChunk], max_context_chars: int = 4000) -> str:

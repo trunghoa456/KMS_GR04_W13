@@ -29,6 +29,11 @@ services:
       PORT: 5432
       USER: ${POSTGRES_USER:-odoo}
       PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+      RAG_PROVIDER: ${RAG_PROVIDER:-ollama}
+      CITYRISE_ODOO_USE_LLM: ${CITYRISE_ODOO_USE_LLM:-1}
+      CITYRISE_ODOO_ALWAYS_USE_LLM: ${CITYRISE_ODOO_ALWAYS_USE_LLM:-1}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:1.5b}
     command:
       - odoo
       - --database=${ODOO_DB:-cityrise_w13}
@@ -42,6 +47,8 @@ services:
       start_period: 180s
     ports:
       - "${ODOO_HTTP_PORT:-8069}:8069"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - odoo_data:/var/lib/odoo
       - ./custom_addons:/mnt/extra-addons
@@ -65,29 +72,31 @@ services:
     environment:
       VECTOR_PERSIST_DIR: ${VECTOR_PERSIST_DIR:-/app/chroma_db}
       VECTOR_COLLECTION: ${VECTOR_COLLECTION:-kms_collection}
-      RAG_PROVIDER: ${RAG_PROVIDER:-local}
+      RAG_PROVIDER: ${RAG_PROVIDER:-ollama}
       RAG_AUDIENCE: ${RAG_AUDIENCE:-public}
-      RAG_ALLOW_ROLE_SWITCH: ${RAG_ALLOW_ROLE_SWITCH:-false}
+      RAG_ALLOW_ROLE_SWITCH: ${RAG_ALLOW_ROLE_SWITCH:-true}
       RAG_TOP_K: ${RAG_TOP_K:-4}
       RAG_TEMPERATURE: ${RAG_TEMPERATURE:-0.2}
       RAG_MAX_CONTEXT_CHARS: ${RAG_MAX_CONTEXT_CHARS:-4000}
       ODOO_URL: http://odoo:8069
       ODOO_DB: ${ODOO_DB:-cityrise_w13}
-      ODOO_LOGIN: ${ODOO_LOGIN:-admin}
-      ODOO_LOGIN_PASSWORD: ${ODOO_LOGIN_PASSWORD:-admin}
+      ODOO_LOGIN: ${ODOO_LOGIN:-manager@cityrise.demo}
+      ODOO_LOGIN_PASSWORD: ${ODOO_LOGIN_PASSWORD:-manager123}
       ODOO_DATA_LIMIT: ${ODOO_DATA_LIMIT:-50}
       ODOO_DB_HOST: db
       ODOO_DB_PORT: 5432
       ODOO_DB_USER: ${POSTGRES_USER:-odoo}
       ODOO_DB_PASSWORD: ${POSTGRES_PASSWORD:-odoo}
       OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
-      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.2:1b}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:1.5b}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
       GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
       GEMINI_MODEL: ${GEMINI_MODEL:-gemini-1.5-flash}
     ports:
       - "${CHATBOT_PORT:-8501}:8501"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8501/_stcore/health', timeout=5)\""]
       interval: 10s

@@ -24,35 +24,35 @@
                 <div class="cityrise-ai-thread" aria-live="polite">
                     <div class="cityrise-ai-message cityrise-ai-message-bot">
                         <p t-if="is_internal">
-                            Xin chào, mình đang chạy trong Odoo với quyền <t t-esc="audience_label"/>. Bạn có thể hỏi về knowledge, sales, purchase, tickets, nhân viên và dữ liệu CityRise theo phân quyền.
+                            Xin chao, minh dang chay trong Odoo voi quyen <t t-esc="audience_label"/>. Ban co the hoi ve knowledge, sales, purchase, tickets, nhan vien va du lieu CityRise theo phan quyen.
                         </p>
                         <p t-else="">
-                            Xin chào, mình có thể hỗ trợ thông tin công khai về sản phẩm CityRise, giá niêm yết, website và nhu cầu tư vấn. Dữ liệu nội bộ sẽ được bảo vệ theo access matrix.
+                            Xin chao, minh chi ho tro thong tin cong khai ve san pham CityRise, gia niem yet, website va nhu cau tu van. Du lieu noi bo duoc bao ve theo access matrix.
                         </p>
                     </div>
                 </div>
                 <div class="cityrise-ai-prompts">
                     <t t-if="is_internal">
-                        <button type="button" data-question="Tổng sales và purchase">Tổng sales và purchase</button>
-                        <button type="button" data-question="Doanh thu tháng này của công ty là bao nhiêu?">Doanh thu tháng này</button>
+                        <button type="button" data-question="Tong sales va purchase">Tong sales va purchase</button>
+                        <button type="button" data-question="Doanh thu hien tai cua cong ty la bao nhieu?">Doanh thu hien tai</button>
                         <button type="button" data-question="Show me the CEO's salary">CEO salary</button>
                         <button type="button" data-question="Purchase order P00030">Purchase P00030</button>
                     </t>
                     <t t-else="">
-                        <button type="button" data-question="Danh sách sản phẩm đang bán">Danh sách sản phẩm</button>
-                        <button type="button" data-question="Căn hộ rẻ nhất là gì?">Căn hộ rẻ nhất</button>
-                        <button type="button" data-question="Căn hộ từ 10 đến 15 tỷ">10-15 tỷ</button>
-                        <button type="button" data-question="Tôi cần tư vấn căn hộ 90x">Cần tư vấn</button>
+                        <button type="button" data-question="Danh sach san pham dang ban">Danh sach san pham</button>
+                        <button type="button" data-question="Can ho re nhat la gi?">Can ho re nhat</button>
+                        <button type="button" data-question="Can ho tu 10 den 15 ty">10-15 ty</button>
+                        <button type="button" data-question="Toi can tu van can ho 90x">Can tu van</button>
                     </t>
                 </div>
                 <form class="cityrise-ai-form">
-                    <textarea name="question" rows="3" placeholder="Nhập câu hỏi của bạn..." required="required"></textarea>
+                    <textarea name="question" rows="3" placeholder="Nhap cau hoi cua ban..." required="required"></textarea>
                     <div class="cityrise-ai-contact" t-if="not is_internal">
-                        <input name="visitor_name" placeholder="Tên của bạn"/>
-                        <input name="visitor_phone" placeholder="Số điện thoại"/>
+                        <input name="visitor_name" placeholder="Ten cua ban"/>
+                        <input name="visitor_phone" placeholder="So dien thoai"/>
                         <input name="visitor_email" placeholder="Email"/>
                     </div>
-                    <button type="submit">Gửi</button>
+                    <button type="submit">Gui</button>
                 </form>
             </div>
         </section>

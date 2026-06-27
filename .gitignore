@@ -8,6 +8,7 @@ chroma_db/
 vector_data/
 postgres_data/
 odoo_data/
+backups/
 *.sqlite3
 *.db
 *.log

@@ -8,4 +8,79 @@
                 title="CityRise AI Chatbot"/>
         </div>
     </t>
+    <t t-name="cityrise_ai_assistant.Systray">
+        <li class="o_cityrise_ai_systray" role="menuitem">
+            <button
+                class="o_cityrise_ai_systray_button"
+                type="button"
+                title="CityRise Internal AI"
+                aria-label="CityRise Internal AI"
+                t-on-click.stop="toggleAssistant">
+                <span class="o_cityrise_ai_systray_mark">AI</span>
+            </button>
+            <section
+                t-if="state.open"
+                class="o_cityrise_ai_chat_panel"
+                t-att-class="{ 'is-minimized': state.minimized }">
+                <header class="o_cityrise_ai_chat_header">
+                    <div class="o_cityrise_ai_chat_title">
+                        <span class="o_cityrise_ai_chat_logo">AI</span>
+                        <span>Ask AI</span>
+                        <i class="fa fa-caret-down" aria-hidden="true"/>
+                    </div>
+                    <div class="o_cityrise_ai_chat_actions">
+                        <button type="button" title="Minimize" aria-label="Minimize" t-on-click.stop="minimizeAssistant">
+                            <i class="fa fa-minus" aria-hidden="true"/>
+                        </button>
+                        <button type="button" title="Close" aria-label="Close" t-on-click.stop="closeAssistant">
+                            <i class="fa fa-times" aria-hidden="true"/>
+                        </button>
+                    </div>
+                </header>
+                <t t-if="!state.minimized">
+                    <div class="o_cityrise_ai_chat_thread" t-ref="thread">
+                        <t t-foreach="state.messages" t-as="message" t-key="message.id">
+                            <div
+                                class="o_cityrise_ai_chat_message"
+                                t-att-class="message.role === 'user' ? 'is-user' : 'is-bot'">
+                                <div class="o_cityrise_ai_chat_message_title" t-if="message.role === 'bot' &amp;&amp; message.id === 'welcome'">
+                                    <span class="o_cityrise_ai_chat_logo">AI</span>
+                                    <span>Ask AI</span>
+                                </div>
+                                <p t-esc="message.answer"/>
+                                <div class="o_cityrise_ai_chat_warning" t-if="message.warning" t-esc="message.warning"/>
+                                <div class="o_cityrise_ai_chat_sources" t-if="message.sources &amp;&amp; message.sources.length">
+                                    Nguon: <t t-esc="message.sources.slice(0, 3).join(', ')"/>
+                                </div>
+                                <div class="o_cityrise_ai_chat_suggestions" t-if="message.suggestions &amp;&amp; message.suggestions.length">
+                                    <button
+                                        t-foreach="message.suggestions.slice(0, 4)"
+                                        t-as="suggestion"
+                                        t-key="suggestion"
+                                        type="button"
+                                        t-on-click.stop="() => this.askPrompt(suggestion)"
+                                        t-esc="suggestion"/>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                    <form class="o_cityrise_ai_chat_form" t-on-submit.prevent="() => this.sendMessage()">
+                        <textarea
+                            rows="1"
+                            placeholder="Message Ask AI..."
+                            t-model="state.input"
+                            t-on-keydown="onKeydown"
+                            t-att-disabled="state.busy"/>
+                        <button
+                            type="submit"
+                            title="Send"
+                            aria-label="Send"
+                            t-att-disabled="state.busy || !state.input.trim()">
+                            <i class="fa fa-paper-plane-o" aria-hidden="true"/>
+                        </button>
+                    </form>
+                </t>
+            </section>
+        </li>
+    </t>
 </templates>

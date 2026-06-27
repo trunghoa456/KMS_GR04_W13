@@ -5,21 +5,26 @@ from odoo.http import request
 
 
 class CityRiseAIController(http.Controller):
-    def _chat_context(self, embedded=False):
+    def _chat_context(self, embedded=False, force_public=False):
         engine = request.env["cityrise.ai.engine"]
-        is_internal = engine._is_internal_user(request.env.user)
+        is_internal = False if force_public else engine._is_internal_user(request.env.user)
         is_manager = is_internal and engine._is_manager_user(request.env.user)
         return {
             "is_internal": is_internal,
             "embedded": embedded,
             "endpoint": "/cityrise_ai/ask_internal" if is_internal else "/cityrise_ai/ask",
             "role_label": "admin" if is_manager else ("employee" if is_internal else "public"),
-            "audience_label": "Admin/Manager" if is_manager else ("Nhân viên" if is_internal else "Khách hàng"),
+            "audience_label": "Admin/Manager"
+            if is_manager
+            else ("Employee/Internal" if is_internal else "Customer/Public"),
         }
 
     @http.route("/ai-assistant", type="http", auth="public", website=True)
     def ai_assistant_page(self, **kwargs):
-        return request.render("cityrise_ai_assistant.ai_assistant_page", self._chat_context(embedded=False))
+        return request.render(
+            "cityrise_ai_assistant.ai_assistant_page",
+            self._chat_context(embedded=False, force_public=True),
+        )
 
     @http.route("/cityrise_ai/backend_frame", type="http", auth="user", website=False)
     def ai_assistant_backend_frame(self, **kwargs):

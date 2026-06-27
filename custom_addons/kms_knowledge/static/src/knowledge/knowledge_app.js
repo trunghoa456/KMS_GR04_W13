@@ -15,6 +15,9 @@ const FOLDER_DIMENSIONS = {
     OPERATIONS: "ops",
     SALES: "sales",
     PURCHASE: "purchase",
+    HR: "hr",
+    IT: "it",
+    LEGAL: "legal",
 };
 const SHARED_DIMENSIONS = Object.values(FOLDER_DIMENSIONS);
 const ARTICLE_FIELDS = [
@@ -270,6 +273,18 @@ export class KmsKnowledgeApp extends Component {
 
     get purchaseArticles() {
         return this.dimensionArticles("purchase");
+    }
+
+    get hrArticles() {
+        return this.dimensionArticles("hr");
+    }
+
+    get itArticles() {
+        return this.dimensionArticles("it");
+    }
+
+    get legalArticles() {
+        return this.dimensionArticles("legal");
     }
 
     get otherArticles() {

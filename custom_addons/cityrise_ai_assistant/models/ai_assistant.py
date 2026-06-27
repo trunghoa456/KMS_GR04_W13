@@ -62,6 +62,89 @@ Question:
 {question}
 """
 
+FINAL_OLLAMA_PROMPT = """You are CityRise AI inside Odoo. You are a Vietnamese answer formatter, not an access-control judge.
+
+Odoo already checked the user's login, role, access matrix, and live database context.
+{role_instruction}
+
+Task:
+Write the final answer in Vietnamese from the Approved draft only.
+
+Hard rules:
+1. Do not change exact numbers, order codes, names, totals, dates, states, or source models.
+2. Do not invent facts outside the Approved draft.
+3. Do not add a denial unless the Approved draft itself denies access.
+4. If access is ALLOWED, never say "khong the truy cap", "khong co quyen", "cannot access", or similar.
+5. For general questions, rewrite the Approved draft guidance directly.
+6. Do not write any "Nguon:" or "Source:" line. The system will add sources after your answer.
+
+Audience: {audience}
+Role: {role}
+Access decision: {access_decision}
+Intent: {intent}
+Sources: {sources}
+
+Approved draft:
+{draft_answer}
+
+User question:
+{question}
+
+Final answer:
+"""
+
+INTERNAL_ALLOWED_OLLAMA_PROMPT = """You are CityRise AI for an authenticated Odoo internal/admin user.
+Odoo already authorized the data below. This is not an access-control task.
+
+Write a concise Vietnamese answer using ONLY the Approved data.
+Never refuse. Never say the user has no permission. Never remove exact numbers, codes, names, dates, states, vendors, buyers, or totals. If the Approved data has multiple bullet lines, keep those lines separate and do not combine monthly totals with all-time totals. Do not add a source line.
+
+Role: {role}
+Intent: {intent}
+Question: {question}
+
+Approved data:
+{draft_answer}
+
+Final answer:
+"""
+
+GENERAL_ALLOWED_OLLAMA_PROMPT = """You are CityRise AI answering a general non-CityRise question.
+
+Answer in Vietnamese at a shallow helpful level, maximum 4 short bullets or 4 short sentences.
+Use the Safe guidance draft if it fits the question. Do not mention internal database, vector, orders, tickets, employees, or private data. Do not add a source line.
+If the question needs live/current external data such as weather, news, exchange rate, stock price, or sports score, say you cannot verify live data. Food/lifestyle suggestions do not require live data.
+
+Question: {question}
+Safe guidance draft:
+{draft_answer}
+
+Final answer:
+"""
+
+DENIED_OLLAMA_PROMPT = """You are CityRise AI inside Odoo.
+Odoo denied this request based on the access matrix.
+
+Rewrite the denial politely in Vietnamese. Do not reveal restricted data. Do not add a source line.
+
+Question: {question}
+Approved denial:
+{draft_answer}
+
+Final answer:
+"""
+
+PUBLIC_ALLOWED_OLLAMA_PROMPT = """You are CityRise AI for a public/customer website user.
+
+Write a short Vietnamese answer using ONLY the public Approved draft below. Keep it surface-level. Do not expose internal orders, tickets, employee private data, vector metadata, logins, emails, or private phone numbers. Do not add a source line.
+
+Question: {question}
+Approved public draft:
+{draft_answer}
+
+Final answer:
+"""
+
 
 class CityRiseAIConversation(models.Model):
     _name = "cityrise.ai.conversation"
@@ -206,6 +289,18 @@ class CityRiseAIEngine(models.AbstractModel):
         sources = sources or []
         suggestions = suggestions or self._suggestions(is_internal)
         role = self._role_label(is_internal)
+        answer, llm_meta = self._finalize_answer_with_ollama(
+            question=question,
+            draft_answer=answer,
+            is_internal=is_internal,
+            role=role,
+            intent=intent,
+            sources=sources,
+        )
+        if llm_meta.get("status") == "ok":
+            ollama_source = "Ollama:%s" % CityRiseVectorStore.ollama_model()
+            if ollama_source not in sources:
+                sources = list(sources) + [ollama_source]
         if not is_internal:
             answer = self._sanitize_public_answer(answer)
         values = {
@@ -233,7 +328,115 @@ class CityRiseAIEngine(models.AbstractModel):
             "conversation_id": conversation.id,
             "need_contact": confidence == "low" and not lead,
             "lead_id": False,
+            "llm_provider": llm_meta.get("provider"),
+            "llm_status": llm_meta.get("status"),
+            "llm_model": llm_meta.get("model"),
         }
+
+    def _finalize_answer_with_ollama(self, question, draft_answer, is_internal, role, intent, sources):
+        meta = {
+            "provider": CityRiseVectorStore.rag_provider(),
+            "status": "not_forced",
+            "model": CityRiseVectorStore.ollama_model(),
+        }
+        if not CityRiseVectorStore.odoo_always_use_llm():
+            return draft_answer, meta
+
+        if CityRiseVectorStore.rag_provider() not in ("ollama", "auto"):
+            meta["status"] = "provider_not_ollama"
+            return (
+                "Ollama mode dang bat, nhung RAG_PROVIDER hien khong phai ollama. "
+                "Vui long dat RAG_PROVIDER=ollama de AI dashboard tra loi bang Ollama.",
+                meta,
+            )
+
+        access_decision = self._ollama_access_decision(draft_answer, is_internal)
+        prompt = self._build_final_ollama_prompt(
+            question=question,
+            draft_answer=draft_answer,
+            is_internal=is_internal,
+            role=role,
+            intent=intent,
+            sources=sources,
+            access_decision=access_decision,
+        )
+        answer, info = CityRiseVectorStore.ollama_generate(prompt, temperature=0.0, timeout=45)
+        if not answer:
+            meta["status"] = info.get("status") or "ollama_failed"
+            meta["error"] = info.get("error", "")
+            return (
+                "Ollama dang khong phan hoi nen AI dashboard chua the tao cau tra loi. "
+                "Hay kiem tra Ollama dang chay va model %s da duoc pull." % CityRiseVectorStore.ollama_model(),
+                meta,
+            )
+
+        meta["status"] = "ok"
+        answer = self._clean_ollama_final_answer(answer)
+        normalized = self._norm(answer)
+        if sources and "nguon" not in normalized and "source" not in normalized:
+            answer += "\nNguon: " + ", ".join(sources[:4])
+        return answer, meta
+
+    def _build_final_ollama_prompt(self, question, draft_answer, is_internal, role, intent, sources, access_decision):
+        draft_answer = draft_answer or "Khong co du lieu duoc phep hien thi."
+        if access_decision == "denied_by_odoo_access_control":
+            return DENIED_OLLAMA_PROMPT.format(question=question or "", draft_answer=draft_answer)
+        if intent == "general":
+            return GENERAL_ALLOWED_OLLAMA_PROMPT.format(
+                question=question or "",
+                draft_answer=draft_answer,
+            )
+        if is_internal:
+            return INTERNAL_ALLOWED_OLLAMA_PROMPT.format(
+                role=role,
+                intent=intent or "unknown",
+                question=question or "",
+                draft_answer=draft_answer,
+            )
+        return PUBLIC_ALLOWED_OLLAMA_PROMPT.format(
+            question=question or "",
+            draft_answer=draft_answer,
+        )
+
+    def _ollama_access_decision(self, draft_answer, is_internal):
+        draft = self._norm(draft_answer)
+        denial_markers = [
+            "khong duoc",
+            "access denied",
+            "khong the chia se",
+            "khong duoc chia se",
+            "public only",
+            "bao mat",
+            "public access guard",
+        ]
+        if any(marker in draft for marker in denial_markers):
+            return "denied_by_odoo_access_control"
+        return "allowed_internal_data" if is_internal else "allowed_public_surface_data"
+
+    def _ollama_role_instruction(self, access_decision):
+        if access_decision == "denied_by_odoo_access_control":
+            return (
+                "ACCESS RESULT: DENIED. The Approved draft is a denial. "
+                "Politely keep that denial and do not reveal restricted data."
+            )
+        if access_decision == "allowed_internal_data":
+            return (
+                "ACCESS RESULT: ALLOWED. The authenticated internal/admin user is allowed to see every fact in the Approved draft. "
+                "Never refuse, never say the user lacks permission, and preserve the facts."
+            )
+        return (
+            "ACCESS RESULT: PUBLIC. The public/customer user may only see the public-surface facts already present in the Approved draft."
+        )
+
+    def _clean_ollama_final_answer(self, answer):
+        value = (answer or "").strip()
+        value = re.sub(r"(?is)^\s*(nguon|source)s?\s*:\s*", "", value).strip()
+        value = re.sub(r"(?is)\n\s*(nguon|source)s?\s*:.*$", "", value).strip()
+        value = re.sub(r"[ \t]+", " ", value)
+        value = re.sub(r"\n{3,}", "\n\n", value)
+        if len(value) > 1800:
+            value = value[:1797].rstrip(".,;: \n") + "..."
+        return value
 
     def _lead_or_contact_request(self, question, contact, is_internal, intent="fallback"):
         if contact.get("email") or contact.get("phone"):
@@ -442,6 +645,8 @@ class CityRiseAIEngine(models.AbstractModel):
         return sources
 
     def _format_rag_vector_answer(self, question, docs, info, is_internal):
+        if CityRiseVectorStore.odoo_always_use_llm():
+            return False
         if not CityRiseVectorStore.odoo_use_llm():
             return False
         if CityRiseVectorStore.rag_provider() not in ("ollama", "auto"):
@@ -617,7 +822,7 @@ class CityRiseAIEngine(models.AbstractModel):
     def _answer_general(self, question, is_internal):
         prompt = GENERAL_CHAT_PROMPT.format(question=question)
         answer = ""
-        if CityRiseVectorStore.rag_provider() in ("ollama", "auto"):
+        if not CityRiseVectorStore.odoo_always_use_llm() and CityRiseVectorStore.rag_provider() in ("ollama", "auto"):
             answer, _info = CityRiseVectorStore.ollama_generate(prompt, temperature=0.2, timeout=12)
             answer = self._compact_general_answer(answer)
             if self._is_low_quality_general_answer(answer):
@@ -740,6 +945,9 @@ class CityRiseAIEngine(models.AbstractModel):
             )
 
         today = fields.Date.context_today(self)
+        q = self._norm(question)
+        wants_current_period = any(word in q for word in ["thang nay", "this month", "current", "hien tai", "month"])
+        wants_all_time = any(word in q for word in ["tat ca", "all time", "toan bo", "tong tat ca"])
         month_start = today.replace(day=1)
         if month_start.month == 12:
             next_month = month_start.replace(year=month_start.year + 1, month=1)
@@ -760,14 +968,15 @@ class CityRiseAIEngine(models.AbstractModel):
         month_total = sum(month_orders.mapped("amount_total"))
         all_total = sum(all_confirmed.mapped("amount_total"))
         answer = (
-            "Admin live data tu Odoo sale.order:\n"
+            "Admin live data tu Odoo sale.order cho cong ty CityRise:\n"
             f"- Ky hien tai: {month_start.strftime('%d/%m/%Y')} - {month_end.strftime('%d/%m/%Y')}\n"
             f"- Sales Order da xac nhan trong ky: {len(month_orders)}\n"
-            f"- Gross revenue trong ky (amount_total): {self._money(month_total)}\n"
-            f"- Tong gross revenue tat ca Sales Order da xac nhan: {self._money(all_total)}"
+            f"- Gross revenue trong ky (amount_total): {self._money(month_total)}"
         )
+        if wants_all_time or not wants_current_period:
+            answer += f"\n- Tong gross revenue tat ca Sales Order da xac nhan: {self._money(all_total)}"
 
-        if not month_orders and all_confirmed:
+        if not month_orders and all_confirmed and not wants_current_period:
             latest = all_confirmed.sorted("date_order", reverse=True)[:1]
             latest_date = latest.date_order.date() if latest.date_order else None
             if latest_date:

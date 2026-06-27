@@ -13,3 +13,284 @@
     border: 0;
     background: #f6f7f9;
 }
+
+.o_cityrise_ai_systray {
+    display: flex;
+    align-items: center;
+}
+
+.o_cityrise_ai_systray_button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+}
+
+.o_cityrise_ai_systray_button:hover,
+.o_cityrise_ai_systray_button:focus-visible {
+    background: rgba(255, 255, 255, 0.1);
+    outline: 0;
+}
+
+.o_cityrise_ai_systray_mark {
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0;
+    background: linear-gradient(135deg, #ffb84d 0%, #e65f89 48%, #00c2b7 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.o_cityrise_ai_chat_panel {
+    position: fixed;
+    z-index: 1200;
+    top: 66px;
+    right: 110px;
+    display: flex;
+    width: 476px;
+    max-width: calc(100vw - 28px);
+    height: calc(100vh - 78px);
+    max-height: 792px;
+    min-height: 420px;
+    flex-direction: column;
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    border-radius: 8px;
+    background: #1d2028;
+    color: #f8fafc;
+    box-shadow: 0 22px 60px rgba(0, 0, 0, 0.42);
+    overflow: hidden;
+    pointer-events: auto;
+}
+
+.o_cityrise_ai_chat_panel.is-minimized {
+    height: auto;
+    min-height: 0;
+}
+
+.o_cityrise_ai_chat_header {
+    display: flex;
+    height: 64px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 14px 0 18px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+    background: #20232c;
+}
+
+.o_cityrise_ai_chat_title {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: 760;
+}
+
+.o_cityrise_ai_chat_logo {
+    display: inline-block;
+    flex: 0 0 auto;
+    font-size: 24px;
+    font-weight: 900;
+    line-height: 1;
+    background: linear-gradient(135deg, #ffb84d 0%, #e65f89 46%, #00c2b7 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.o_cityrise_ai_chat_title .fa {
+    color: rgba(248, 250, 252, 0.42);
+    font-size: 12px;
+}
+
+.o_cityrise_ai_chat_actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.o_cityrise_ai_chat_actions button {
+    display: grid;
+    width: 24px;
+    height: 24px;
+    place-items: center;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: rgba(248, 250, 252, 0.58);
+}
+
+.o_cityrise_ai_chat_actions button:hover,
+.o_cityrise_ai_chat_actions button:focus-visible {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    outline: 0;
+}
+
+.o_cityrise_ai_chat_thread {
+    display: flex;
+    min-height: 0;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 14px;
+    padding: 22px 20px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.o_cityrise_ai_chat_thread::-webkit-scrollbar {
+    width: 8px;
+}
+
+.o_cityrise_ai_chat_thread::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgba(148, 163, 184, 0.34);
+}
+
+.o_cityrise_ai_chat_message {
+    max-width: 88%;
+    color: rgba(248, 250, 252, 0.82);
+    line-height: 1.45;
+}
+
+.o_cityrise_ai_chat_message:first-child {
+    margin-top: auto;
+}
+
+.o_cityrise_ai_chat_message.is-user {
+    align-self: flex-end;
+    border-radius: 10px;
+    background: #714b67;
+    color: #ffffff;
+    padding: 10px 12px;
+}
+
+.o_cityrise_ai_chat_message.is-bot {
+    align-self: flex-start;
+}
+
+.o_cityrise_ai_chat_message p {
+    margin: 0;
+    white-space: pre-line;
+}
+
+.o_cityrise_ai_chat_message_title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: #f8fafc;
+    font-size: 22px;
+    font-weight: 760;
+}
+
+.o_cityrise_ai_chat_sources,
+.o_cityrise_ai_chat_warning {
+    margin-top: 8px;
+    color: rgba(203, 213, 225, 0.58);
+    font-size: 12px;
+}
+
+.o_cityrise_ai_chat_suggestions {
+    display: flex;
+    margin-top: 12px;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.o_cityrise_ai_chat_suggestions button {
+    max-width: 100%;
+    border: 0;
+    border-radius: 4px;
+    background: rgba(148, 163, 184, 0.28);
+    color: rgba(248, 250, 252, 0.88);
+    font-weight: 700;
+    line-height: 1.2;
+    padding: 4px 8px;
+    text-align: left;
+    white-space: normal;
+}
+
+.o_cityrise_ai_chat_suggestions button:hover,
+.o_cityrise_ai_chat_suggestions button:focus-visible {
+    background: rgba(20, 184, 166, 0.28);
+    color: #ffffff;
+    outline: 0;
+}
+
+.o_cityrise_ai_chat_form {
+    position: relative;
+    display: flex;
+    flex: 0 0 auto;
+    gap: 8px;
+    padding: 14px 12px 12px;
+    background: #1d2028;
+}
+
+.o_cityrise_ai_chat_form textarea {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    max-height: 92px;
+    resize: none;
+    border: 1px solid #00a09d;
+    border-radius: 8px;
+    background: #252934;
+    color: #f8fafc;
+    font: inherit;
+    outline: 0;
+    padding: 11px 42px 11px 12px;
+}
+
+.o_cityrise_ai_chat_form textarea::placeholder {
+    color: rgba(203, 213, 225, 0.34);
+}
+
+.o_cityrise_ai_chat_form textarea:disabled {
+    opacity: 0.74;
+}
+
+.o_cityrise_ai_chat_form button {
+    position: absolute;
+    right: 22px;
+    bottom: 21px;
+    display: grid;
+    width: 30px;
+    height: 30px;
+    place-items: center;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: rgba(248, 250, 252, 0.88);
+}
+
+.o_cityrise_ai_chat_form button:hover,
+.o_cityrise_ai_chat_form button:focus-visible {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    outline: 0;
+}
+
+.o_cityrise_ai_chat_form button:disabled {
+    color: rgba(148, 163, 184, 0.36);
+}
+
+@media (max-width: 900px) {
+    .o_cityrise_ai_chat_panel {
+        top: 56px;
+        right: 12px;
+        left: 12px;
+        width: auto;
+        height: calc(100vh - 68px);
+        max-height: 720px;
+    }
+}
