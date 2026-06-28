@@ -28,6 +28,13 @@ export class CityRiseAISystray extends Component {
     }
 
     get promptChips() {
+        if (!(user.isAdmin || user.isSystem)) {
+            return [
+                "SOP onboarding nhan vien IT",
+                "Quy trinh xu ly yeu cau khach hang",
+                "Danh sach san pham dang ban",
+            ];
+        }
         return [
             "Latest PO from supplier Azure interior",
             "Doanh thu hien tai cua cong ty la bao nhieu?",

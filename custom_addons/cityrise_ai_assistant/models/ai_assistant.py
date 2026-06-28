@@ -230,10 +230,22 @@ class CityRiseAIEngine(models.AbstractModel):
                 suggestions=suggestions,
             )
 
+        if is_internal and not is_manager and self._is_manager_only_question(question, intent):
+            return self._result(
+                self._employee_restricted_answer(question),
+                "high",
+                is_internal,
+                question,
+                contact,
+                intent="manager_access_denied",
+                sources=["access_matrix.md", "Odoo role check"],
+                suggestions=["Hoi SOP/knowledge duoc phep", "Danh sach san pham", "Can ho re nhat la gi?"],
+            )
+
         if self._wants_human(question):
             return self._lead_or_contact_request(question, contact, is_internal, intent="lead_request")
 
-        vector_response = self._answer_from_vector(question, is_internal, intent)
+        vector_response = self._answer_from_vector(question, is_internal, intent, role=self._role_label(is_internal))
         if vector_response:
             answer, sources, suggestions, confidence = vector_response
             return self._result(
@@ -578,6 +590,12 @@ class CityRiseAIEngine(models.AbstractModel):
         ]
         if not is_internal:
             return public
+        if not self._is_manager_user(self.env.user):
+            return public + [
+                "SOP onboarding nhan vien IT",
+                "Quy trinh xu ly yeu cau khach hang",
+                "Chinh sach public cho khach hang",
+            ]
         return public + [
             "Tổng quan database",
             "Tình hình helpdesk",
@@ -588,7 +606,7 @@ class CityRiseAIEngine(models.AbstractModel):
             "SOP onboarding nhân viên IT",
         ]
 
-    def _answer_from_vector(self, question, is_internal, intent):
+    def _answer_from_vector(self, question, is_internal, intent, role=None):
         public_vector_intents = {"knowledge"}
         internal_vector_intents = {"knowledge", "business", "helpdesk", "staff", "database"}
         if is_internal:
@@ -607,7 +625,12 @@ class CityRiseAIEngine(models.AbstractModel):
         vector_query = question
         if is_internal and intent == "database":
             vector_query = question + " knowledge sales purchase helpdesk employee product"
-        docs, info = CityRiseVectorStore.search(vector_query, is_internal=is_internal, k=5 if is_internal else 3)
+        docs, info = CityRiseVectorStore.search(
+            vector_query,
+            is_internal=is_internal,
+            k=5 if is_internal else 3,
+            role=role or self._role_label(is_internal),
+        )
         if not docs:
             return False
 
@@ -789,10 +812,18 @@ class CityRiseAIEngine(models.AbstractModel):
 
     def _is_internal_business_question(self, question):
         q = self._norm(question)
-        return any(word in q for word in [
-            "don hang", "sales order", "purchase", "mua hang", "bao gia", "rfq",
-            "doanh thu", "nha cung cap", "tong tien", "quotation",
-        ])
+        if self._extract_business_code(question):
+            return True
+        strict_markers = [
+            "don hang", "sales order", "purchase order", "purchase", "mua hang",
+            "rfq", "doanh thu", "nha cung cap", "tong tien", "quotation history",
+            "confirmed sales", "confirmed purchase",
+        ]
+        if any(word in q for word in strict_markers):
+            return True
+        quote_markers = ["bao gia", "quotation"]
+        internal_quote_context = ["ma", "so", "khach hang", "customer", "lich su", "follow", "xac nhan"]
+        return any(word in q for word in quote_markers) and any(word in q for word in internal_quote_context)
 
     def _wants_human(self, question):
         q = self._norm(question)
@@ -922,11 +953,50 @@ class CityRiseAIEngine(models.AbstractModel):
         asks_revenue = any(word in q for word in revenue_words) and any(word in q for word in company_scope)
         return asks_salary or asks_revenue
 
+    def _is_manager_only_question(self, question, intent=False):
+        q = self._norm(question)
+        if self._is_admin_only_question(question):
+            return True
+        if self._extract_business_code(question):
+            return True
+
+        manager_only_markers = [
+            "tong sales", "tong purchase", "sales va purchase", "tong doanh thu",
+            "gross revenue", "revenue", "doanh thu", "loi nhuan", "profit",
+            "bao cao tai chinh", "financial report", "database", "tong quan database",
+            "so lieu", "metric", "kpi", "purchase order", "sales order", "rfq",
+            "don hang", "don mua hang", "nha cung cap", "vendor", "buyer",
+            "customer email", "du lieu khach hang", "chroma", "vector metadata",
+        ]
+        if any(marker in q for marker in manager_only_markers):
+            return True
+
+        if intent in ("database", "business"):
+            return True
+
+        if intent == "staff":
+            staff_private_markers = [
+                "nhan vien", "employee", "staff", "email", "mail", "phone",
+                "so dien thoai", "sdt", "login", "tai khoan", "quan ly",
+                "manager", "phong ban", "department", "danh sach",
+            ]
+            return any(marker in q for marker in staff_private_markers)
+
+        if intent == "helpdesk":
+            helpdesk_private_markers = [
+                "ticket", "urgent", "sla", "khieu nai", "bao loi", "customer",
+                "bao cao", "tong quan", "failed", "unassigned",
+            ]
+            return any(marker in q for marker in helpdesk_private_markers)
+
+        return False
+
     def _employee_restricted_answer(self, question):
         return (
             "Ban dang o quyen Employee nen khong duoc xem cau hoi nay theo access_matrix.md. "
-            "Du lieu cap quan tri nhu gross revenue, profit, payroll/luong CEO va bao cao tai chinh chi danh cho Admin/Manager. "
-            "Ban van co the hoi thong tin san pham, knowledge, purchase/sales order phu hop cong viec hoac ticket ho tro."
+            "Du lieu cap quan tri nhu gross revenue, profit, payroll/luong CEO, tong sales/purchase, database overview, "
+            "chi tiet sales/purchase order, ticket/SLA va thong tin nhan su chi danh cho Admin/Manager. "
+            "Ban van co the hoi thong tin san pham cong khai hoac SOP/knowledge duoc phep."
         )
 
     def _answer_admin_only_question(self, question):

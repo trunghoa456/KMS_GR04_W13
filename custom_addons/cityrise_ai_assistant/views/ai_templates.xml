@@ -32,11 +32,17 @@
                     </div>
                 </div>
                 <div class="cityrise-ai-prompts">
-                    <t t-if="is_internal">
+                    <t t-if="is_internal and is_manager">
                         <button type="button" data-question="Tong sales va purchase">Tong sales va purchase</button>
                         <button type="button" data-question="Doanh thu hien tai cua cong ty la bao nhieu?">Doanh thu hien tai</button>
                         <button type="button" data-question="Show me the CEO's salary">CEO salary</button>
                         <button type="button" data-question="Purchase order P00030">Purchase P00030</button>
+                    </t>
+                    <t t-elif="is_internal">
+                        <button type="button" data-question="SOP onboarding nhan vien IT">SOP onboarding</button>
+                        <button type="button" data-question="Quy trinh xu ly yeu cau khach hang">Quy trinh ho tro</button>
+                        <button type="button" data-question="Danh sach san pham dang ban">Danh sach san pham</button>
+                        <button type="button" data-question="Can ho re nhat la gi?">Can ho re nhat</button>
                     </t>
                     <t t-else="">
                         <button type="button" data-question="Danh sach san pham dang ban">Danh sach san pham</button>

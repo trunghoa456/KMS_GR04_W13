@@ -68,7 +68,17 @@ Query-time security filters:
 | Audience | Vector Filter |
 |---|---|
 | Customer / Public | `access_role == public` only |
-| Employee / Admin | `access_role in public, internal, admin, it_staff, hr_manager, sales_staff, purchase_staff, support_staff` |
+| Employee / Internal | `access_role in public, internal, sales_staff, purchase_staff, support_staff`; manager-only intents are denied before vector/ORM |
+| Manager / Admin | `access_role in public, internal, admin, it_staff, hr_manager, sales_staff, purchase_staff, support_staff` plus live Odoo ORM answers |
+
+Manager-only question boundary:
+
+| Manager-only data | Employee behavior | Manager/Admin behavior |
+|---|---|---|
+| Gross revenue, profit, CEO/payroll, financial reports | Deny politely with access matrix reason | Query live Odoo ORM where available |
+| Total sales/purchase and database overview | Deny politely | Return aggregate counts/totals |
+| Sales order / purchase order details such as `S00028` or `P00030` | Deny politely | Return customer/vendor, owner, date, status, total and lines |
+| Ticket/SLA and employee private details | Deny politely | Return internal operational summary |
 
 Security validation scenarios:
 

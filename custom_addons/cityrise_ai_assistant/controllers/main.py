@@ -11,6 +11,7 @@ class CityRiseAIController(http.Controller):
         is_manager = is_internal and engine._is_manager_user(request.env.user)
         return {
             "is_internal": is_internal,
+            "is_manager": is_manager,
             "embedded": embedded,
             "endpoint": "/cityrise_ai/ask_internal" if is_internal else "/cityrise_ai/ask",
             "role_label": "admin" if is_manager else ("employee" if is_internal else "public"),

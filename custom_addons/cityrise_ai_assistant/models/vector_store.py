@@ -2,8 +2,9 @@
 
 File nay khong tao vector DB; no chi doc lai ./chroma_db/kms_collection de
 CityRise AI search thong tin. Ham role_filter la diem bao mat quan trong:
-khach hang public chi duoc filter access_role == public, con nhan vien/admin
-duoc filter them internal/it_staff/hr_manager va cac role noi bo khac.
+khach hang public chi duoc filter access_role == public, employee chi duoc
+lay public/internal/SOP theo vai tro thong thuong, con manager/admin moi duoc
+lay admin/hr_manager/it_staff va cac chunk nhay cam hon.
 
 File nay cung cache ket noi ChromaDB theo thoi gian sua file chroma.sqlite3 de
 tra loi nhanh hon, phu hop yeu cau nhan vien/admin hoi va nhan cau tra loi nhanh.
@@ -34,6 +35,14 @@ INTERNAL_ACCESS_ROLES = (
     "support_staff",
 )
 
+EMPLOYEE_ACCESS_ROLES = (
+    "public",
+    "internal",
+    "sales_staff",
+    "purchase_staff",
+    "support_staff",
+)
+
 
 def compact_text(text, limit=240):
     value = re.sub(r"\s+", " ", text or "").strip()
@@ -48,7 +57,7 @@ class CityRiseVectorStore:
     _env_cache = None
 
     @classmethod
-    def search(cls, query, is_internal, k=4):
+    def search(cls, query, is_internal, k=4, role=None):
         started = time.monotonic()
         if not KmsLocalEmbeddings:
             return [], {"status": "missing_embedding"}
@@ -74,7 +83,7 @@ class CityRiseVectorStore:
                 )
                 cls._cache_key = cache_key
 
-            docs = cls._db.similarity_search(query, k=k, filter=cls.role_filter(is_internal))
+            docs = cls._db.similarity_search(query, k=k, filter=cls.role_filter(is_internal, role=role))
             return docs, {
                 "status": "ok",
                 "path": str(persist_dir),
@@ -99,10 +108,12 @@ class CityRiseVectorStore:
         return current.parents[3] / "chroma_db"
 
     @classmethod
-    def role_filter(cls, is_internal):
+    def role_filter(cls, is_internal, role=None):
         if not is_internal:
             return {"access_role": "public"}
-        return {"$or": [{"access_role": role} for role in INTERNAL_ACCESS_ROLES]}
+        role = (role or "employee").lower()
+        roles = INTERNAL_ACCESS_ROLES if role in ("admin", "manager", "hr_manager") else EMPLOYEE_ACCESS_ROLES
+        return {"$or": [{"access_role": access_role} for access_role in roles]}
 
     @classmethod
     def project_root(cls):
