@@ -376,11 +376,7 @@ class CityRiseAIEngine(models.AbstractModel):
         if not answer:
             meta["status"] = info.get("status") or "ollama_failed"
             meta["error"] = info.get("error", "")
-            return (
-                "Ollama dang khong phan hoi nen AI dashboard chua the tao cau tra loi. "
-                "Hay kiem tra Ollama dang chay va model %s da duoc pull." % CityRiseVectorStore.ollama_model(),
-                meta,
-            )
+            return draft_answer, meta
 
         meta["status"] = "ok"
         answer = self._clean_ollama_final_answer(answer)
