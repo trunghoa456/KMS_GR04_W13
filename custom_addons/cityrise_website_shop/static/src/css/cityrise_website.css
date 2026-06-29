@@ -18,18 +18,18 @@
 }
 
 #wrapwrap header#top .navbar {
-    min-height: 92px;
+    min-height: 116px;
     background: #ffffff !important;
 }
 
 #wrapwrap header#top .navbar-brand {
-    min-width: 82px;
+    min-width: 116px;
 }
 
 #wrapwrap header#top .navbar-brand img {
-    width: 72px !important;
-    height: 72px !important;
-    max-height: 72px !important;
+    width: 104px !important;
+    height: 104px !important;
+    max-height: 104px !important;
     object-fit: contain;
 }
 
@@ -347,17 +347,17 @@
 
 @media (max-width: 767.98px) {
     #wrapwrap header#top .navbar {
-        min-height: 76px;
+        min-height: 88px;
     }
 
     #wrapwrap header#top .navbar-brand {
-        min-width: 64px;
+        min-width: 82px;
     }
 
     #wrapwrap header#top .navbar-brand img {
-        width: 56px !important;
-        height: 56px !important;
-        max-height: 56px !important;
+        width: 76px !important;
+        height: 76px !important;
+        max-height: 76px !important;
     }
 
     .cityrise-copy-band {
