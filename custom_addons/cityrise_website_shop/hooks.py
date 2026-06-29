@@ -1,8 +1,12 @@
 import base64
 from io import BytesIO
+from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFilter
 
+
+MODULE_DIR = Path(__file__).resolve().parent
+LOGO_PATH = MODULE_DIR / "static" / "src" / "img" / "cityrise_logo.png"
 
 PURPLE = "#714b67"
 SOFT_PURPLE = "#b99acc"
@@ -14,6 +18,12 @@ def _jpeg_data(image):
     stream = BytesIO()
     image.convert("RGB").save(stream, format="JPEG", quality=88, optimize=True)
     return base64.b64encode(stream.getvalue())
+
+
+def _logo_data():
+    if not LOGO_PATH.exists():
+        return False
+    return base64.b64encode(LOGO_PATH.read_bytes())
 
 
 def _gradient(width, height, top, bottom):
@@ -403,6 +413,7 @@ def _configure_menu(env, website):
 
 def _configure_shop_options(env, website):
     vnd = _ensure_vnd_pricelist(env, website)
+    logo = _logo_data()
     website.write({
         "name": "CityRise",
         "shop_page_container": "regular",
@@ -422,12 +433,20 @@ def _configure_shop_options(env, website):
             "o_wsale_products_opt_has_comparison"
         ),
     })
+    if logo:
+        website.write({"logo": logo})
     if website.company_id:
-        website.company_id.write({
+        company_values = {
             "name": "CityRise",
             "phone": "+1 555-555-5556",
             "email": "customer-care@edu-cityrise.odoo.com",
-        })
+        }
+        if logo:
+            company_values.update({
+                "logo": logo,
+                "logo_web": logo,
+            })
+        website.company_id.write(company_values)
     for xmlid, active in [
         ("website_sale.products_categories", False),
         ("website_sale.products_categories_top", True),
