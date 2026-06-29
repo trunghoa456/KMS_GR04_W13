@@ -18,8 +18,19 @@
 }
 
 #wrapwrap header#top .navbar {
-    min-height: 72px;
+    min-height: 92px;
     background: #ffffff !important;
+}
+
+#wrapwrap header#top .navbar-brand {
+    min-width: 82px;
+}
+
+#wrapwrap header#top .navbar-brand img {
+    width: 72px !important;
+    height: 72px !important;
+    max-height: 72px !important;
+    object-fit: contain;
 }
 
 #wrapwrap header#top .navbar-brand,
@@ -336,7 +347,17 @@
 
 @media (max-width: 767.98px) {
     #wrapwrap header#top .navbar {
-        min-height: 64px;
+        min-height: 76px;
+    }
+
+    #wrapwrap header#top .navbar-brand {
+        min-width: 64px;
+    }
+
+    #wrapwrap header#top .navbar-brand img {
+        width: 56px !important;
+        height: 56px !important;
+        max-height: 56px !important;
     }
 
     .cityrise-copy-band {
