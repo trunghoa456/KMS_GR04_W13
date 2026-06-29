@@ -125,7 +125,12 @@ Final answer:
 DENIED_OLLAMA_PROMPT = """You are CityRise AI inside Odoo.
 Odoo denied this request based on the access matrix.
 
-Rewrite the denial politely in Vietnamese. Do not reveal restricted data. Do not add a source line.
+Rewrite the denial politely in Vietnamese.
+Keep the same access-control meaning as the Approved denial: this user is not allowed to view the requested restricted data.
+Do not reveal restricted data.
+Do not offer to help with the same restricted topic such as revenue, profit, PO/RFQ, sales order, purchase order, ticket/SLA, payroll, employee contact details, database, vector metadata, or reports.
+Only suggest safe alternatives: public product information, public website guidance, or allowed SOP/knowledge for the user's role.
+Do not add a source line.
 
 Question: {question}
 Approved denial:
@@ -376,10 +381,14 @@ class CityRiseAIEngine(models.AbstractModel):
         if not answer:
             meta["status"] = info.get("status") or "ollama_failed"
             meta["error"] = info.get("error", "")
+            if access_decision == "denied_by_odoo_access_control":
+                return self._safe_denial_answer(draft_answer, is_internal), meta
             return draft_answer, meta
 
         meta["status"] = "ok"
         answer = self._clean_ollama_final_answer(answer)
+        if access_decision == "denied_by_odoo_access_control":
+            answer = self._safe_denial_answer(draft_answer, is_internal)
         normalized = self._norm(answer)
         if sources and "nguon" not in normalized and "source" not in normalized:
             answer += "\nNguon: " + ", ".join(sources[:4])
@@ -412,10 +421,14 @@ class CityRiseAIEngine(models.AbstractModel):
             "khong duoc",
             "access denied",
             "khong the chia se",
+            "khong chia se",
             "khong duoc chia se",
+            "khong duoc xem",
+            "khong hien thi",
             "public only",
             "bao mat",
             "public access guard",
+            "chi danh cho admin/manager",
         ]
         if any(marker in draft for marker in denial_markers):
             return "denied_by_odoo_access_control"
@@ -445,6 +458,21 @@ class CityRiseAIEngine(models.AbstractModel):
         if len(value) > 1800:
             value = value[:1797].rstrip(".,;: \n") + "..."
         return value
+
+    def _safe_denial_answer(self, draft_answer, is_internal):
+        if is_internal:
+            return (
+                "Bạn đang ở quyền Employee nên không được xem nội dung này theo access_matrix.md. "
+                "Các dữ liệu như doanh thu, profit, payroll/lương, PO/RFQ, sales/purchase order, "
+                "ticket/SLA, database/vector và thông tin nhân sự riêng tư chỉ dành cho Manager/Admin. "
+                "Bạn vẫn có thể hỏi thông tin sản phẩm công khai hoặc SOP/knowledge được phép."
+            )
+        return (
+            "Nội dung này là dữ liệu nội bộ của CityRise nên khách hàng chỉ được xem thông tin công khai "
+            "như sản phẩm, giá niêm yết, website và hướng hỗ trợ chung. Mình không chia sẻ chi tiết "
+            "sales, purchase, ticket, database/vector, email khách hàng, báo cáo nội bộ hoặc thông tin "
+            "nhân sự riêng tư qua chế độ public."
+        )
 
     def _lead_or_contact_request(self, question, contact, is_internal, intent="fallback"):
         if contact.get("email") or contact.get("phone"):
@@ -810,9 +838,13 @@ class CityRiseAIEngine(models.AbstractModel):
         q = self._norm(question)
         if self._extract_business_code(question):
             return True
+        tokens = set(self._tokens(question))
+        if tokens & {"po", "rfq"}:
+            return True
         strict_markers = [
             "don hang", "sales order", "purchase order", "purchase", "mua hang",
-            "rfq", "doanh thu", "nha cung cap", "tong tien", "quotation history",
+            "don mua", "don ban", "ban hang", "doanh so", "gia tri ban", "gia tri mua",
+            "doanh thu", "nha cung cap", "tong tien", "quotation history",
             "confirmed sales", "confirmed purchase",
         ]
         if any(word in q for word in strict_markers):
@@ -928,13 +960,15 @@ class CityRiseAIEngine(models.AbstractModel):
 
     def _is_public_privacy_request(self, question):
         q = self._norm(question)
+        tokens = set(self._tokens(question))
         wants_contact = any(word in q for word in ["so dien thoai", "sdt", "phone", "email", "mail", "login"])
         wants_person = self._is_staff_question(question)
         wants_internal = any(word in q for word in [
             "luong", "mat khau", "password", "noi bo", "don hang", "purchase",
-            "doanh thu", "database", "vector", "chroma", "rfq", "bao cao",
+            "don mua", "don ban", "ban hang", "doanh so", "doanh thu",
+            "database", "vector", "chroma", "bao cao",
             "ticket", "sla", "ma ticket", "du lieu khach hang", "customer email",
-        ])
+        ]) or bool(tokens & {"po", "rfq"})
         return (wants_contact and wants_person) or wants_internal
 
     def _is_admin_only_question(self, question):
@@ -955,13 +989,17 @@ class CityRiseAIEngine(models.AbstractModel):
             return True
         if self._extract_business_code(question):
             return True
+        tokens = set(self._tokens(question))
+        if tokens & {"po", "rfq"}:
+            return True
 
         manager_only_markers = [
             "tong sales", "tong purchase", "sales va purchase", "tong doanh thu",
-            "gross revenue", "revenue", "doanh thu", "loi nhuan", "profit",
+            "gross revenue", "revenue", "doanh thu", "doanh so", "ban hang",
+            "gia tri ban", "gia tri mua", "loi nhuan", "profit",
             "bao cao tai chinh", "financial report", "database", "tong quan database",
             "so lieu", "metric", "kpi", "purchase order", "sales order", "rfq",
-            "don hang", "don mua hang", "nha cung cap", "vendor", "buyer",
+            "don hang", "don mua", "don mua hang", "don ban", "nha cung cap", "vendor", "buyer",
             "customer email", "du lieu khach hang", "chroma", "vector metadata",
         ]
         if any(marker in q for marker in manager_only_markers):
@@ -1153,10 +1191,12 @@ class CityRiseAIEngine(models.AbstractModel):
         q = self._norm(question or "")
         business_words = [
             "don hang", "sales", "sale order", "purchase", "rfq", "doanh thu",
-            "bao cao", "database", "vector", "chroma", "ticket", "sla",
+            "doanh so", "ban hang", "don mua", "don ban", "bao cao",
+            "database", "vector", "chroma", "ticket", "sla",
             "du lieu khach hang", "customer email",
         ]
-        if any(word in q for word in business_words):
+        tokens = set(self._tokens(question or ""))
+        if any(word in q for word in business_words) or bool(tokens & {"po", "rfq"}):
             return (
                 "Phần này là dữ liệu nội bộ của CityRise, nên khách hàng chỉ xem được thông tin công khai "
                 "như sản phẩm, giá niêm yết và hướng hỗ trợ chung. Mình không chia sẻ chi tiết sales, "
